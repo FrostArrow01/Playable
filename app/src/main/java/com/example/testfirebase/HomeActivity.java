@@ -7,38 +7,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.auth.User;
-
-import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private TextView emailT, passwordT, providerT;
-    private EditText usuario, address;
+    private EditText usuarioE;
     private SharedPreferences.Editor editor;
     private Button saveButton, popupB;
     private FirebaseFirestore db;
-    private String email, provider;
+    private String email, provider, usuario;
     private DocumentReference usuariosC;
 
 
@@ -51,9 +42,6 @@ public class HomeActivity extends AppCompatActivity {
         setTitle("Playable");
 
         db = FirebaseFirestore.getInstance();
-        popupB = findViewById(R.id.popupB);
-
-
 
         //Recogemos los datos de la actividad anterior
         Intent i = getIntent();
@@ -82,11 +70,41 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-    public void abrirPopupUsuario(View view){
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_perfil:
+                abrirPopupUsuario();
+                break;
+            case R.id.action_logout:
+                logOut();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public void abrirPopupUsuario(){
         Intent popupWindow = new Intent(HomeActivity.this, PopUpUsuario.class);
         popupWindow.putExtra("email", email);
-        startActivity(popupWindow);
+        db.collection("users").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+                        popupWindow.putExtra("usuario", it.get("usuario").toString());
+                        usuario = it.get("usuario").toString();
+                        popupWindow.putExtra("nombre", it.get("nombre").toString());
+                        popupWindow.putExtra("apellidos", it.get("apellidos").toString());
+                        popupWindow.putExtra("edad", it.get("edad").toString());
+                        startActivity(popupWindow);
+                    }
+                });
     }
 
     public void guardarUsuario(View view){ //Funcion apuntes para guardar usuario y campos
@@ -101,13 +119,13 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void recuperarUsuario(View view){ //Funcion apuntes para recuperar usuario
+    public void recuperarUsuario(){ //Funcion apuntes para recuperar usuario
         db.collection("users").document(email).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot it) {
-                        usuario.setText(it.get("usuario").toString());
-                        address.setText(it.get("address").toString());
+                        usuarioE.setText(it.get("usuario").toString());
+
                     }
                 });
     }
@@ -116,7 +134,7 @@ public class HomeActivity extends AppCompatActivity {
         db.collection("users").document(email).delete();
     }
 
-    public void logOut(View view){
+    public void logOut(){
         FirebaseAuth.getInstance().signOut();
         editor.clear();
         editor.apply();

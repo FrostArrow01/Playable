@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TestFirebase</string>
+    <string name="prefs_file">PreferencesKey</string>
+</resources>

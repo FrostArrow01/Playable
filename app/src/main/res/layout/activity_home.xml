@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/AzulMarinoF"
+    tools:context=".HomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/emailT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="email" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20px" />
+
+        <TextView
+            android:id="@+id/proovedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Proovedor" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20px" />
+
+        <Space
+            android:id="@+id/nombreUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="20px" />
+
+        <Button
+            android:id="@+id/popupB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10px"
+            android:onClick="abrirPopupUsuario"
+            android:text="Informacion de usuario"
+            android:textColor="@color/AzulMarinoF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/loginB"
+                android:layout_width="35px"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:layout_weight="1"
+                android:onClick="logOut"
+                android:text="Cerrar Sesión"
+                android:textColor="@color/AzulMarinoF" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

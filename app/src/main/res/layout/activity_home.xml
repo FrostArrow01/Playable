@@ -44,30 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="20px" />
 
-        <Button
-            android:id="@+id/popupB"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10px"
-            android:onClick="abrirPopupUsuario"
-            android:text="Informacion de usuario"
-            android:textColor="@color/AzulMarinoF" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/loginB"
-                android:layout_width="35px"
-                android:layout_height="wrap_content"
-                android:layout_margin="10px"
-                android:layout_weight="1"
-                android:onClick="logOut"
-                android:text="Cerrar Sesión"
-                android:textColor="@color/AzulMarinoF" />
-
-        </LinearLayout>
+            android:orientation="horizontal"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

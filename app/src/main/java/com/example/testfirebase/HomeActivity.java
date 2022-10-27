@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -49,7 +50,9 @@ public class HomeActivity extends AppCompatActivity {
         provider = i.getStringExtra("provider");
 
         db = FirebaseFirestore.getInstance();
-        getUser(); //recogemos los datos del usuario
+         //recogemos los datos del usuario
+
+        getUser();
 
         emailT = findViewById(R.id.emailT);
         providerT = findViewById(R.id.proovedor);
@@ -69,14 +72,20 @@ public class HomeActivity extends AppCompatActivity {
         Bundle b = new Bundle();
         b.putString("mensaje","Integracion de firebase funciona");
         analytics.logEvent("PantallaPrincipal", b);
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.home_menu, menu);
         esteMenu = menu;
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu){
+        menu.getItem(0).setTitle(usuario);
+        return true;
     }
 
     @Override
@@ -91,6 +100,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     public void getUser(){
         db.collection("users").document(email).get()

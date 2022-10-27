@@ -45,6 +45,7 @@ public class PopUpUsuario extends AppCompatActivity {
         Intent i = getIntent();
         email = i.getStringExtra("email");
 
+
         //Encontramos los editText para luego recogemos sus valores
         emailE = findViewById(R.id.editTextEmail);
         emailE.setText(email);
@@ -53,9 +54,6 @@ public class PopUpUsuario extends AppCompatActivity {
         apellidosE = findViewById(R.id.editTextTextApellidos);
         edadE = findViewById(R.id.editTextTextEdad);
         traerDatos();
-
-
-
 
     }
 
@@ -76,7 +74,6 @@ public class PopUpUsuario extends AppCompatActivity {
 
     public void guardarDatos(View view){
         if(!usuarioE.getText().toString().matches("")){
-
             db.collection("users").document(email).update("usuario", usuarioE.getText().toString());
             db.collection("users").document(email).update("nombre", nombreE.getText().toString());
             db.collection("users").document(email).update("apellidos", apellidosE.getText().toString());

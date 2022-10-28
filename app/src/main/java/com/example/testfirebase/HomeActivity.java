@@ -1,6 +1,7 @@
 package com.example.testfirebase;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 
@@ -34,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     private String email, provider, usuario, nombre, apellidos, edad;
     private DocumentReference usuariosC;
     private Menu esteMenu;
+    private final static int CERRAR_POPUP = 101;
 
 
     @Override
@@ -84,7 +86,8 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu (Menu menu){
-        menu.getItem(0).setTitle(usuario);
+        getUserUsuario();
+        esteMenu.getItem(0).setTitle(usuario);
         return true;
     }
 
@@ -116,6 +119,16 @@ public class HomeActivity extends AppCompatActivity {
                 });
     }
 
+    public void getUserUsuario(){ //se hace una petición mas simple para no sobrecargar
+        db.collection("users").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+                        usuario = it.get("usuario").toString();
+                    }
+                });
+    }
+
 
     public void abrirPopupUsuario(){
         Intent popupWindow = new Intent(HomeActivity.this, PopUpUsuario.class);
@@ -124,32 +137,25 @@ public class HomeActivity extends AppCompatActivity {
             popupWindow.putExtra("nombre", nombre);
             popupWindow.putExtra("apellidos", apellidos);
             popupWindow.putExtra("edad", edad);
-            startActivity(popupWindow);
-
-
+            startActivityForResult(popupWindow, CERRAR_POPUP);
     }
 
-    public void guardarUsuario(View view){ //Funcion apuntes para guardar usuario y campos
 
-        //Con update podemos editar campos individualmente
-        db.collection("users").document(email);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == CERRAR_POPUP){
+            getUserUsuario();
+            esteMenu.getItem(0).setTitle(usuario);
+        }
     }
 
-    public void recuperarUsuario(){ //Funcion apuntes para recuperar usuario
-        db.collection("users").document(email).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot it) {
-                        usuarioE.setText(it.get("usuario").toString());
-
-                    }
-                });
-    }
 
     public void borrarUsuario(View view){ //Funcion apuntes para borrar usuario
         db.collection("users").document(email).delete();
     }
+
 
     public void logOut(){
         FirebaseAuth.getInstance().signOut();

@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/action_perfil"
-        android:title="usuario"
-        app:showAsAction="ifRoom" />
+        android:title="Editar perfil"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_logout"

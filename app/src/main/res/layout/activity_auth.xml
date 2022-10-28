@@ -23,8 +23,14 @@
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
+            android:layout_height="201dp"
+            app:srcCompat="@drawable/playablelogo" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/playablehomelogo" />
+            app:srcCompat="@drawable/playabletitletext" />
 
         <Space
             android:layout_width="match_parent"
@@ -52,7 +58,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10px" />
+            android:layout_height="25px" />
 
         <TextView
             android:id="@+id/textView"

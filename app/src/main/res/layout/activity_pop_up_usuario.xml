@@ -43,7 +43,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="..."
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:maxLength="16" />
 
         <Space
             android:layout_width="match_parent"

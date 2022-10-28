@@ -201,7 +201,7 @@ public class AuthActivity extends AppCompatActivity {
         hashMap.put("usuario", "");
         hashMap.put("nombre", "");
         hashMap.put("apellidos", "");
-        hashMap.put("edad", "");
+        hashMap.put("biografia", "");
 
         db.collection("users").document(email).set(hashMap);
     }

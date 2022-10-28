@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +35,12 @@ public class HomeActivity extends AppCompatActivity {
     private EditText usuarioE;
     private SharedPreferences.Editor editor;
     private FirebaseFirestore db;
-    private String email, provider, usuario, nombre, apellidos, edad;
+    private String email, provider, usuario, nombre, apellidos, biografia;
     private DocumentReference usuariosC;
     private Menu esteMenu;
     private final static int CERRAR_POPUP = 101;
 
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    @Override
+    @Override //menu options
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.home_menu, menu);
         esteMenu = menu;
@@ -89,6 +94,26 @@ public class HomeActivity extends AppCompatActivity {
         getUserUsuario();
         esteMenu.getItem(0).setTitle(usuario);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() { //hace falta pulsar 2veces la tecla de volver para salir
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            this.finishAffinity();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Pulsa atrás de nuevo para salir", Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -113,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
                         usuario = it.get("usuario").toString();
                         nombre = it.get("nombre").toString();
                         apellidos = it.get("apellidos").toString();
-                        edad = it.get("edad").toString();
+                        biografia = it.get("biografia").toString();
                         if(usuario.equals("")){
                             abrirPopupUsuario();
                             Toast.makeText(HomeActivity.this, "Completa tu perfil", Toast.LENGTH_SHORT).show();
@@ -160,6 +185,6 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         editor.clear();
         editor.apply();
-        onBackPressed();
+        finish();
     }
 }

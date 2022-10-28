@@ -19,7 +19,7 @@ public class PopUpUsuario extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private String email;
-    private EditText emailE, usuarioE, nombreE, apellidosE, edadE;
+    private EditText emailE, usuarioE, nombreE, apellidosE, biografiaE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class PopUpUsuario extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*0.8), (int) (height*.7));
+        getWindow().setLayout((int) (width*0.8), (int) (height*.9));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
@@ -52,7 +52,7 @@ public class PopUpUsuario extends AppCompatActivity {
         usuarioE = findViewById(R.id.editTextTextUsuario);
         nombreE = findViewById(R.id.editTextTextNombre);
         apellidosE = findViewById(R.id.editTextTextApellidos);
-        edadE = findViewById(R.id.editTextTextEdad);
+        biografiaE = findViewById(R.id.editTextTextBiografia);
         traerDatos();
 
     }
@@ -65,26 +65,25 @@ public class PopUpUsuario extends AppCompatActivity {
                         usuarioE.setText(it.get("usuario").toString());
                         nombreE.setText(it.get("nombre").toString());
                         apellidosE.setText(it.get("apellidos").toString());
-                        edadE.setText(it.get("edad").toString());
+                        biografiaE.setText(it.get("biografia").toString());
                     }
                 });
     }
-
-
 
     public void guardarDatos(View view){
         if(!usuarioE.getText().toString().matches("")){
             db.collection("users").document(email).update("usuario", usuarioE.getText().toString());
             db.collection("users").document(email).update("nombre", nombreE.getText().toString());
             db.collection("users").document(email).update("apellidos", apellidosE.getText().toString());
-            db.collection("users").document(email).update("edad", edadE.getText().toString());
+            db.collection("users").document(email).update("biografia", biografiaE.getText().toString());
             finish();
         }else{
             Toast.makeText(this, "Asegurate de llenar todos los campos", Toast.LENGTH_SHORT).show();
         }
+    }
 
-
-
+    public void uploadFoto(View view){
+        Toast.makeText(this, "Aun no disponible: subir foto", Toast.LENGTH_SHORT).show();
     }
 
     public void volver(View view){

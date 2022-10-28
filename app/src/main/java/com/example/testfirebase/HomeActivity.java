@@ -30,7 +30,6 @@ public class HomeActivity extends AppCompatActivity {
     private TextView emailT, passwordT, providerT;
     private EditText usuarioE;
     private SharedPreferences.Editor editor;
-    private Button saveButton, popupB;
     private FirebaseFirestore db;
     private String email, provider, usuario, nombre, apellidos, edad;
     private DocumentReference usuariosC;
@@ -55,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
          //recogemos los datos del usuario
 
         getUser();
+
 
         emailT = findViewById(R.id.emailT);
         providerT = findViewById(R.id.proovedor);
@@ -114,7 +114,10 @@ public class HomeActivity extends AppCompatActivity {
                         nombre = it.get("nombre").toString();
                         apellidos = it.get("apellidos").toString();
                         edad = it.get("edad").toString();
-
+                        if(usuario.equals("")){
+                            abrirPopupUsuario();
+                            Toast.makeText(HomeActivity.this, "Completa tu perfil", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -133,10 +136,6 @@ public class HomeActivity extends AppCompatActivity {
     public void abrirPopupUsuario(){
         Intent popupWindow = new Intent(HomeActivity.this, PopUpUsuario.class);
         popupWindow.putExtra("email", email);
-            popupWindow.putExtra("usuario", usuario);
-            popupWindow.putExtra("nombre", nombre);
-            popupWindow.putExtra("apellidos", apellidos);
-            popupWindow.putExtra("edad", edad);
             startActivityForResult(popupWindow, CERRAR_POPUP);
     }
 

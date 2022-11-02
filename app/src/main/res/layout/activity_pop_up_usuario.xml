@@ -20,21 +20,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="170dp"
+            android:layout_height="173dp"
+            android:layout_gravity="center"
+            android:onClick="uploadFoto"
+            app:srcCompat="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:srcCompat="@drawable/ic_launcher" />
+            android:gravity="center"
+            android:text="Foto de perfil" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20px" />
+            android:layout_height="40px" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="left"
             android:text="Nombre de usuario" />
 
         <EditText
@@ -43,7 +52,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="..."
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:maxLength="16" />
 
         <Space
             android:layout_width="match_parent"
@@ -53,7 +63,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="left"
             android:text="Email" />
 
         <EditText
@@ -74,7 +84,7 @@
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="left"
             android:text="Nombre" />
 
         <EditText
@@ -93,7 +103,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="left"
             android:text="Apellidos" />
 
         <EditText
@@ -111,11 +121,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Edad" />
+            android:gravity="left"
+            android:text="Biografia" />
 
         <EditText
-            android:id="@+id/editTextTextEdad"
+            android:id="@+id/editTextTextBiografia"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

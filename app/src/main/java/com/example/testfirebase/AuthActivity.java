@@ -27,6 +27,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,14 +84,14 @@ public class AuthActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(AuthActivity.this, "Se ha enviado un email para recuperar tu contraseña.", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(view, "Se ha enviado un email para recuperar tu contraseña", Snackbar.LENGTH_LONG).show();
                             }else{
-                                Toast.makeText(AuthActivity.this, "El usuario con el correo: "+email.getText().toString()+" no existe.", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(view, "El usuario con el correo: \"+email.getText().toString()+\" no existe", Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });
         }else{
-            Toast.makeText(this, "Introduce el correo electrónico", Toast.LENGTH_SHORT).show();
+            Snackbar.make(view, "Introduce el correo electrónico", Snackbar.LENGTH_LONG).show();
         }
 
     }
@@ -141,7 +142,7 @@ public class AuthActivity extends AppCompatActivity {
                                             });
 
                                 }else {
-                                    Toast.makeText(AuthActivity.this, "Error al iniciar sesion con google", Toast.LENGTH_SHORT).show();
+                                    Snackbar.make(findViewById(android.R.id.content), "Error al iniciar sesion con google", Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -165,12 +166,12 @@ public class AuthActivity extends AppCompatActivity {
                                 guardarUsuario("BASIC",email.getText().toString());
                                 successI(email.getText().toString(), "BASIC");
                             }else {
-                                Toast.makeText(AuthActivity.this, "Error al autenticar el usuario, puede que el usuario ya exista", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(android.R.id.content), "Error al autenticar el usuario, puede que el usuario ya exista", Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });
         }else{
-            Toast.makeText(this, "Tienes que rellenar todos los campos", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Tienes que rellenar todos los campos", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -183,14 +184,12 @@ public class AuthActivity extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 successI(email.getText().toString(), "BASIC");
                             }else{
-                                Toast.makeText(AuthActivity.this, "Error al autenticar el usuario", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(android.R.id.content), "Error al autenticar el usuario", Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });
-
-
         }else{
-            Toast.makeText(this, "Tienes que rellenar todos los campos", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Tienes que rellenar todos los campos", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -209,7 +208,7 @@ public class AuthActivity extends AppCompatActivity {
 
 
     public void successI(String email, String providerType){
-        Intent i = new Intent(this, HomeActivity.class);
+        Intent i = new Intent(this, HomeActivityD.class);
         i.putExtra("email", email);
         i.putExtra("provider", providerType);
         startActivity(i);

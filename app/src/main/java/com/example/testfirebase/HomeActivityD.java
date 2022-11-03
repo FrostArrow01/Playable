@@ -1,11 +1,14 @@
 package com.example.testfirebase;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -49,11 +53,11 @@ public class HomeActivityD extends AppCompatActivity  {
     private final static int CERRAR_POPUP = 101;
     boolean doubleBackToExitPressedOnce = false;
     private DrawerLayout drawer;
+    private NavigationMenuItemView nav_salir, nav_ajustes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         //Recogemos los datos de la actividad anterior
         Intent i = getIntent();
@@ -98,15 +102,25 @@ public class HomeActivityD extends AppCompatActivity  {
         Bundle b = new Bundle();
         b.putString("mensaje","Integracion de firebase funciona");
         analytics.logEvent("PantallaPrincipal", b);
+
     }
 
-
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);
 
+        nav_salir = findViewById(R.id.nav_salir);
+        nav_salir.setOnClickListener(new View.OnClickListener() { //funcion para el boton salir
+            @Override
+            public void onClick(View view) {
+                logOut();
+            }
+        });
+
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+
     }
 
 

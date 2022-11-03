@@ -34,6 +34,7 @@ public class SlideshowFragment extends Fragment {
     private String  emailPre, providerPre, usuario, nombre, apellidos, biografia;
     private final static int CERRAR_POPUP = 101;
     private SharedPreferences preferences;
+    private TextView usuarioDrawer, biografiaDrawer;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +55,6 @@ public class SlideshowFragment extends Fragment {
         preferences = (SharedPreferences) this.getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
         emailPre = preferences.getString("email", null);
         providerPre = preferences.getString("provider", null);
-
 
         db.collection("users").document(emailPre).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -92,6 +92,7 @@ public class SlideshowFragment extends Fragment {
                         db.collection("users").document(emailPre).update("apellidos", apellidosE.getText().toString());
                         db.collection("users").document(emailPre).update("biografia", biografiaE.getText().toString());
                         Snackbar.make(view, "Los datos se han guardado correctamente", Snackbar.LENGTH_LONG).show();
+
                     }catch (Exception e){
                         Snackbar.make(view, "¡Ha habido un error al guardar los datos!", Snackbar.LENGTH_LONG).show();
                     }

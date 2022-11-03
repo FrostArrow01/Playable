@@ -16,7 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -43,8 +45,7 @@ public class HomeActivityD extends AppCompatActivity  {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeDBinding binding;
     private SharedPreferences preferences;
-    private TextView emailT, passwordT, providerT;
-    private EditText usuarioE;
+    private TextView usuarioD, biografiaD;
     private SharedPreferences.Editor editor;
     private FirebaseFirestore db;
     private String  email, provider, usuario, nombre, apellidos, biografia;
@@ -64,6 +65,8 @@ public class HomeActivityD extends AppCompatActivity  {
         email = i.getStringExtra("email");
         provider = i.getStringExtra("provider");
 
+        db = FirebaseFirestore.getInstance();
+        getUserandBio();
 
         //Shared preferences
         preferences = (SharedPreferences) getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
@@ -96,19 +99,15 @@ public class HomeActivityD extends AppCompatActivity  {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
-        //Evento analytics
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
-        Bundle b = new Bundle();
-        b.putString("mensaje","Integracion de firebase funciona");
-        analytics.logEvent("PantallaPrincipal", b);
-
     }
 
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);
+        usuarioD = findViewById(R.id.usuarioDrawer);
+        biografiaD = findViewById(R.id.biografiaDrawer);
+        getUserandBio();
 
         nav_salir = findViewById(R.id.nav_salir);
         nav_salir.setOnClickListener(new View.OnClickListener() { //funcion para el boton salir
@@ -122,8 +121,6 @@ public class HomeActivityD extends AppCompatActivity  {
                 || super.onSupportNavigateUp();
 
     }
-
-
 
     @Override
     public void onBackPressed() { //hace falta pulsar 2veces la tecla de volver para salir
@@ -143,6 +140,25 @@ public class HomeActivityD extends AppCompatActivity  {
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+    }
+
+    public void getUserandBio(){
+        db.collection("users").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+                        usuario = it.get("usuario").toString();
+                        biografia = it.get("biografia").toString();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        usuarioD = findViewById(R.id.usuarioDrawer);
+                        biografiaD = findViewById(R.id.biografiaDrawer);
+                        usuarioD.setText(usuario);
+                        biografiaD.setText(biografia);
+                    }
+                });
     }
 
     public void borrarUsuario(View view){ //Funcion apuntes para borrar usuario

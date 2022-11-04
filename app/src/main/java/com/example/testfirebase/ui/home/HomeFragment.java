@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,17 +25,11 @@ import com.example.testfirebase.databinding.FragmentHomeBinding;
 import com.example.testfirebase.models.Cancion;
 import com.example.testfirebase.models.CancionDocument;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +45,8 @@ public class HomeFragment extends Fragment {
     private ArrayList albumesCanciones;
     private ImageView imagenAlbum;
     private List<Cancion> cancionesList;
+    private TextView albumtitle;
+    private ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -71,23 +67,27 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
 
-        imagenAlbum = view.findViewById(R.id.imagenAlbum);
-        Glide.with(view)
-                .load("https://firebasestorage.googleapis.com/v0/b/testfirebase-a8f70.appspot.com/o/Canciones%2FHollow%20Knight%2Fhollow.jpg?alt=media&token=6b67eab5-1f96-4560-ad68-a336de85a318")
-                .into(imagenAlbum);
+        getAlbums();
+
+
 
         preferences = (SharedPreferences) this.getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
         emailPre = preferences.getString("email", null);
         providerPre = preferences.getString("provider", null);
 
 
-        getAlbums();
+
         emailT = view.findViewById(R.id.emailT);
         emailT.setText(emailPre);
-
     }
 
     public void getAlbums(){
+        progressBar = getView().findViewById(R.id.progressBar);
+        albumtitle = getView().findViewById(R.id.albumtitle0);
+        imagenAlbum = getView().findViewById(R.id.imagenAlbum);
+        albumtitle.setVisibility(View.INVISIBLE);
+        imagenAlbum.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         db.collection("albumes")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -105,6 +105,16 @@ public class HomeFragment extends Fragment {
                             }
 
 
+                            albumtitle.setText(albumes.getDocuments().get(0).get("tituloAlbum").toString());
+
+
+                            Glide.with(getActivity())
+                                    .load(albumes.getDocuments().get(0).get("caratula"))
+                                    .into(imagenAlbum);
+
+                            progressBar.setVisibility(View.INVISIBLE);
+                            albumtitle.setVisibility(View.VISIBLE);
+                            imagenAlbum.setVisibility(View.VISIBLE);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                             Snackbar.make(getView(), "Error recogiendo los albumes", Snackbar.LENGTH_LONG).show();

@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.testfirebase.databinding.ActivityHomeDBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,7 +53,7 @@ public class HomeActivityD extends AppCompatActivity  {
     private FirebaseFirestore db;
     private String  email, provider, usuario, nombre, apellidos, biografia;
     private DocumentReference usuariosC;
-    private Menu estemenu;
+    private ImageView imageButton;
     private final static int CERRAR_POPUP = 101;
     boolean doubleBackToExitPressedOnce = false;
     private DrawerLayout drawer;
@@ -101,12 +104,10 @@ public class HomeActivityD extends AppCompatActivity  {
 
     }
 
-    @SuppressLint("RestrictedApi")
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);
-        usuarioD = findViewById(R.id.usuarioDrawer);
-        biografiaD = findViewById(R.id.biografiaDrawer);
         getUserandBio();
 
         nav_salir = findViewById(R.id.nav_salir);
@@ -155,8 +156,15 @@ public class HomeActivityD extends AppCompatActivity  {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         usuarioD = findViewById(R.id.usuarioDrawer);
                         biografiaD = findViewById(R.id.biografiaDrawer);
+                        imageButton = findViewById(R.id.imagenDrawer);
                         usuarioD.setText(usuario);
                         biografiaD.setText(biografia);
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if(user.getPhotoUrl() != null){
+                            Glide.with(getApplicationContext())
+                                    .load(user.getPhotoUrl())
+                                    .into(imageButton);
+                        }
                     }
                 });
     }

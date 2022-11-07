@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="390dp"
+        android:elevation="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
     <TextView
         android:id="@+id/text_home"
         android:layout_width="match_parent"
@@ -20,56 +34,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:background="@color/AzulMarinoF"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:scrollbarStyle="insideOverlay">
 
-        <TextView
-            android:id="@+id/emailT"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="email" />
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@color/AzulMarinoF"
+            android:orientation="vertical">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20px" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/albumList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20px" />
+        </LinearLayout>
+    </ScrollView>
 
-        <Space
-            android:id="@+id/nombreUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="20px" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <ImageView
-            android:id="@+id/imagenAlbum"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/ic_baseline_edit_24" />
-
-        <TextView
-            android:id="@+id/albumtitle0"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:text="TextView" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

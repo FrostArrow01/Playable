@@ -87,7 +87,7 @@ public class HomeActivityD extends AppCompatActivity  {
         binding.appBarHomeActivityD.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Próximamente: reproducir muscia aleatoria", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Próximamente: reproducir musica aleatoria", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -119,6 +119,7 @@ public class HomeActivityD extends AppCompatActivity  {
                 logOut();
             }
         });
+
 
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
@@ -159,8 +160,12 @@ public class HomeActivityD extends AppCompatActivity  {
                         usuarioD = findViewById(R.id.usuarioDrawer);
                         biografiaD = findViewById(R.id.biografiaDrawer);
                         imageButton = findViewById(R.id.imagenDrawer);
-                        usuarioD.setText(usuario);
-                        biografiaD.setText(biografia);
+                        if(usuario.matches("") || biografia.matches("")){
+                            Toast.makeText(HomeActivityD.this, "Ve a la pestaña mi perfil para completar tus datos", Toast.LENGTH_SHORT).show();
+                        }else{
+                            usuarioD.setText(usuario);
+                            biografiaD.setText(biografia);
+                        }
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         if(user.getPhotoUrl() != null){
                             Glide.with(getApplicationContext())
@@ -174,7 +179,6 @@ public class HomeActivityD extends AppCompatActivity  {
     public void borrarUsuario(View view){ //Funcion apuntes para borrar usuario
         db.collection("users").document(email).delete();
     }
-
 
     public void logOut(){
         FirebaseAuth.getInstance().signOut();

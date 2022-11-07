@@ -18,8 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.example.testfirebase.Adapter;
 import com.example.testfirebase.R;
 import com.example.testfirebase.databinding.FragmentHomeBinding;
 import com.example.testfirebase.models.Cancion;
@@ -48,6 +50,9 @@ public class HomeFragment extends Fragment {
     private TextView albumtitle;
     private ProgressBar progressBar;
 
+    private RecyclerView albumList;
+    private Adapter adapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -66,28 +71,32 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
-
         getAlbums();
 
+        //Para el recyclerview
 
 
+        //Preferences
         preferences = (SharedPreferences) this.getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
         emailPre = preferences.getString("email", null);
         providerPre = preferences.getString("provider", null);
 
 
+    }
 
-        emailT = view.findViewById(R.id.emailT);
-        emailT.setText(emailPre);
+    public void enlazarAdapter(){
+        albumList = getView().findViewById(R.id.albumList);
+
+        adapter = new Adapter(getContext(),albumes);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
+        albumList.setLayoutManager(gridLayoutManager);
+        albumList.setAdapter(adapter);
+
     }
 
     public void getAlbums(){
         progressBar = getView().findViewById(R.id.progressBar);
-        albumtitle = getView().findViewById(R.id.albumtitle0);
-        imagenAlbum = getView().findViewById(R.id.imagenAlbum);
-        albumtitle.setVisibility(View.INVISIBLE);
-        imagenAlbum.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+
         db.collection("albumes")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -96,25 +105,19 @@ public class HomeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             albumes = task.getResult();
                             for(int i =0;i<albumes.size();i++) {
-                                Log.d("Album", albumes.getDocuments().get(i).get("tituloAlbum").toString() +": "+
-                                albumes.getDocuments().get(i).get("caratula").toString());
+                                Log.d("Album", albumes.getDocuments().get(i).get("tituloAlbum").toString() + ": " +
+                                        albumes.getDocuments().get(i).get("caratula").toString());
 
                                 cancionesList = albumes.getDocuments().get(i).toObject(CancionDocument.class).getCanciones();
-                                for (int j = 0; j < cancionesList.size(); j++)
-                                    Log.d("Cancion",cancionesList.get(j).titulo +": " + cancionesList.get(j).url);
+                                for (int j = 0; j < cancionesList.size(); j++) {
+                                    Log.d("Cancion", cancionesList.get(j).titulo + ": " + cancionesList.get(j).url);
+
+                                }
+
                             }
-
-
-                            albumtitle.setText(albumes.getDocuments().get(0).get("tituloAlbum").toString());
-
-
-                            Glide.with(getActivity())
-                                    .load(albumes.getDocuments().get(0).get("caratula"))
-                                    .into(imagenAlbum);
-
                             progressBar.setVisibility(View.INVISIBLE);
-                            albumtitle.setVisibility(View.VISIBLE);
-                            imagenAlbum.setVisibility(View.VISIBLE);
+                            enlazarAdapter();
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                             Snackbar.make(getView(), "Error recogiendo los albumes", Snackbar.LENGTH_LONG).show();

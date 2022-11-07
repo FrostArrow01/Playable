@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/GrisF"
-    tools:context=".PopUpUsuario">
-
+    android:background="@color/AzulMarinoF"
+    tools:context=".ui.MiPerfil.SlideshowFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,20 +19,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/imageButton"
+        <ImageView
+            android:id="@+id/profileImageB"
             android:layout_width="170dp"
-            android:layout_height="173dp"
-            android:layout_gravity="center"
-            android:onClick="uploadFoto"
-            app:srcCompat="@drawable/ic_launcher" />
+            android:layout_height="170dp"
+            android:layout_gravity="center|top"
+            android:src="@drawable/ic_baseline_person_24" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Foto de perfil" />
+            android:text="Foto de perfil"
+            android:textColor="@color/GrisF" />
 
         <Space
             android:layout_width="match_parent"
@@ -44,16 +43,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="Nombre de usuario" />
+            android:text="Nombre de usuario"
+            android:textColor="@color/GrisF" />
 
         <EditText
-            android:id="@+id/editTextTextUsuario"
+            android:id="@+id/usuarioE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="..."
             android:inputType="textPersonName"
-            android:maxLength="16" />
+            android:maxLength="16"
+            android:textColor="@color/GrisF" />
 
         <Space
             android:layout_width="match_parent"
@@ -64,17 +65,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="Email" />
+            android:text="Email"
+            android:textColor="@color/GrisF" />
 
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/emailE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:enabled="true"
             android:focusable="false"
             android:hint="example@provider.com"
-            android:inputType="none" />
+            android:inputType="none"
+            android:textColor="@color/GrisF" />
 
         <Space
             android:layout_width="match_parent"
@@ -85,15 +88,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="Nombre" />
+            android:text="Nombre"
+            android:textColor="@color/GrisF" />
 
         <EditText
-            android:id="@+id/editTextTextNombre"
+            android:id="@+id/nombreE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="..."
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/GrisF" />
 
         <Space
             android:layout_width="match_parent"
@@ -104,15 +109,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="Apellidos" />
+            android:text="Apellidos"
+            android:textColor="@color/GrisF" />
 
         <EditText
-            android:id="@+id/editTextTextApellidos"
+            android:id="@+id/apellidosE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="..."
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/GrisF" />
 
         <Space
             android:layout_width="match_parent"
@@ -122,15 +129,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="Biografia" />
+            android:text="Biografia"
+            android:textColor="@color/GrisF" />
 
         <EditText
-            android:id="@+id/editTextTextBiografia"
+            android:id="@+id/biografiaE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="..."
-            android:inputType="textPersonName" />
+            android:inputType="textMultiLine"
+            android:maxLength="82"
+            android:textColor="@color/GrisF" />
 
         <Space
             android:layout_width="match_parent"
@@ -147,17 +157,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10px"
                 android:layout_weight="1"
-                android:onClick="guardarDatos"
-                android:text="Guardar" />
+                android:text="Guardar"
+                android:textColor="@color/AzulMarinoF" />
 
-            <Button
-                android:id="@+id/volverB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10px"
-                android:layout_weight="1"
-                android:onClick="volver"
-                android:text="Volver" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

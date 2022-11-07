@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/AmarilloF</item>
         <item name="colorPrimaryVariant">@color/NaranjaF</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/AmarilloF</item>
         <item name="colorSecondaryVariant">@color/AmarilloF</item>
@@ -12,5 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/AzulMarinoF</item>
         <!-- Customize your theme here. -->
+
     </style>
+
 </resources>

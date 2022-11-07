@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -104,7 +105,6 @@ public class HomeActivityD extends AppCompatActivity  {
         NavigationUI.setupWithNavController(navigationView, navController);
 
     }
-
 
     //Se ejecuta cada vez que se abre el drawer
     @Override

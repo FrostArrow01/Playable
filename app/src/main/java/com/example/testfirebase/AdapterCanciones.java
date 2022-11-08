@@ -28,7 +28,7 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
     private LayoutInflater inflater;
     private Button reproducir;
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
 
     public AdapterCanciones(Context context, List<Cancion> cancionesList, String caratula){
         this.cancionesList = cancionesList;
@@ -56,22 +56,23 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
             holder.reproducir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(holder.reproducir.getText().toString().equals("Reproducir")){
-                        mediaPlayer = new MediaPlayer();
                         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         try {
-                            mediaPlayer.setDataSource(cancionesList.get(position).url);
-                            mediaPlayer.prepare();
-                            mediaPlayer.start();
-                            holder.reproducir.setText("Detener");
-                        } catch (IOException e) {
+                            if (!mediaPlayer.isPlaying()){
+                                mediaPlayer.setDataSource(cancionesList.get(position).url);
+                                mediaPlayer.prepare();
+                                mediaPlayer.start();
+                                holder.reproducir.setText("Detener");
+                            }else{
+                                mediaPlayer.stop();
+                                mediaPlayer.release();
+                                mediaPlayer = null;
+                                mediaPlayer = new MediaPlayer();
+                                holder.reproducir.setText("Reproducir");
+                            }
+                        }catch (IOException e){
                             e.printStackTrace();
                         }
-                    }else{
-                        mediaPlayer.pause();
-                        holder.reproducir.setText("Reproducir");
-                    }
-
 
                 }
             });

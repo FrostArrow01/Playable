@@ -9,9 +9,12 @@ import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +56,6 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        setTitle("Autenticación");
         db = FirebaseFirestore.getInstance();
 
 
@@ -61,6 +63,9 @@ public class AuthActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         signup = findViewById(R.id.signupB);
         login = findViewById(R.id.loginB);
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#fbdc4c")));
+        setTitle(Html.fromHtml("<font color=\"black\">"+"Autenticación" + "</font>"));
 
         session();
     }

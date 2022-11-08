@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView albumList;
     private Adapter adapter;
-    private Toolbar toolbar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -120,7 +119,6 @@ public class HomeFragment extends Fragment {
     //Para el recyclerview
     public void enlazarAdapter(){
         albumList = getView().findViewById(R.id.albumList);
-
         adapter = new Adapter(getContext(),albumes);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
         albumList.setLayoutManager(gridLayoutManager);
@@ -138,7 +136,7 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             albumes = task.getResult();
-                            for(int i =0;i<albumes.size();i++) {
+                          /*  for(int i =0;i<albumes.size();i++) {
                                 Log.d("Album", albumes.getDocuments().get(i).get("tituloAlbum").toString() + ": " +
                                         albumes.getDocuments().get(i).get("caratula").toString());
 
@@ -148,7 +146,7 @@ public class HomeFragment extends Fragment {
 
                                 }
 
-                            }
+                            } */
                             progressBar.setVisibility(View.INVISIBLE);
                             enlazarAdapter();
 

@@ -13,6 +13,7 @@
         <item name="android:statusBarColor">@color/AzulMarinoF</item>
         <item name="android:navigationBarColor">@color/AzulMarinoF</item>
 
+
         <!-- Customize your theme here. -->
     </style>
 

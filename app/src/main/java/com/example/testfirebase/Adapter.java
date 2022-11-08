@@ -63,7 +63,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.imagenAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(view.getContext(), CancionesActivity.class);
+                i.putExtra("tituloAlbum", albumesList.get(position).getTitulo());
+                i.putExtra("caratula", albumesList.get(position).toString());
+                view.getContext().startActivity(i);
             }
         });
         holder.imagenAlbum.setOnLongClickListener(new View.OnLongClickListener() {

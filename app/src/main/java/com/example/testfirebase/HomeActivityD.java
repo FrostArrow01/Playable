@@ -88,8 +88,10 @@ public class HomeActivityD extends AppCompatActivity  {
         binding.appBarHomeActivityD.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Próximamente: reproducir musica aleatoria", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(view.getContext(), CancionesActivity.class);
+                i.putExtra("tituloAlbum", "Random");
+                i.putExtra("caratula", "Random");
+                view.getContext().startActivity(i);
             }
         });
         drawer = binding.drawerLayout;

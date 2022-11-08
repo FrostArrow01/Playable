@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -34,6 +35,7 @@ public class CancionesActivity extends AppCompatActivity {
     private Album albumRandom;
 
     private RecyclerView cancionesRecy;
+    private AdapterCanciones adapterCanciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class CancionesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_canciones);
 
         db = FirebaseFirestore.getInstance();
+        cancionesRecy = findViewById(R.id.cancionesRecy);
 
         Intent intent = getIntent();
         titulo =  intent.getStringExtra("tituloAlbum");
@@ -78,6 +81,8 @@ public class CancionesActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 album = task.getResult();
                                 cancionesList = album.getDocuments().get(0).toObject(CancionDocument.class).getCanciones();
+                                caratula = album.getDocuments().get(0).get("caratula").toString();
+                                enlazarAdapter();
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
                                 Snackbar.make(findViewById(android.R.id.content), "Error recogiendo los albumes", Snackbar.LENGTH_LONG).show();
@@ -94,8 +99,11 @@ public class CancionesActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             albumes = task.getResult();
-                            cancionesList = albumes.getDocuments().get(0).toObject(CancionDocument.class).getCanciones();
-                            setTitle(Html.fromHtml("<font color=\"black\">"+"Canciones de " + albumes.getDocuments().get((int) (Math.random()*albumes.size())).get("tituloAlbum")+ "</font>"));
+                            int numAl = (int) (Math.random()*albumes.size());
+                            cancionesList = albumes.getDocuments().get(numAl).toObject(CancionDocument.class).getCanciones();
+                            setTitle(Html.fromHtml("<font color=\"black\">"+"Canciones de " + albumes.getDocuments().get(numAl).get("tituloAlbum")+ "</font>"));
+                            caratula = albumes.getDocuments().get(numAl).get("caratula").toString();
+                            enlazarAdapter();
                         } else {
                             Log.d(TAG, "Error getting random document: ", task.getException());
                             Snackbar.make(findViewById(android.R.id.content), "Error recogiendo los albumes", Snackbar.LENGTH_LONG).show();
@@ -105,7 +113,10 @@ public class CancionesActivity extends AppCompatActivity {
     }
 
     public void enlazarAdapter(){
-
+        adapterCanciones = new AdapterCanciones(this, cancionesList, caratula);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1, GridLayoutManager.VERTICAL, false);
+        cancionesRecy.setLayoutManager(gridLayoutManager);
+        cancionesRecy.setAdapter(adapterCanciones);
     }
 
 }

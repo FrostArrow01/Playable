@@ -73,7 +73,6 @@ public class AuthActivity extends AppCompatActivity {
 
         if(emailR != null && providerR != null){
            successI(emailR, providerR);
-
         }
     }
 

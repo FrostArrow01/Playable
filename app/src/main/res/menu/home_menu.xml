@@ -3,13 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_perfil"
-        android:title="Editar perfil"
-        app:showAsAction="never" />
+        android:id="@+id/action_search"
+        android:title="Buscar álbumes..."
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.SearchView"/>
 
-    <item
-        android:id="@+id/action_logout"
-        android:title="Cerrar Sesión"
-        app:showAsAction="never"/>
 
 </menu>

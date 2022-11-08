@@ -3,19 +3,27 @@ package com.example.testfirebase.ui.home;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -58,6 +66,9 @@ public class HomeFragment extends Fragment {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
+        setHasOptionsMenu(true);
+
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -73,8 +84,6 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         getAlbums();
 
-        //Para el recyclerview
-
 
         //Preferences
         preferences = (SharedPreferences) this.getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
@@ -84,9 +93,32 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView1 = (SearchView) menuItem.getActionView();
+        searchView1.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    //Para el recyclerview
     public void enlazarAdapter(){
         albumList = getView().findViewById(R.id.albumList);
-
         adapter = new Adapter(getContext(),albumes);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
         albumList.setLayoutManager(gridLayoutManager);
@@ -104,7 +136,7 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             albumes = task.getResult();
-                            for(int i =0;i<albumes.size();i++) {
+                          /*  for(int i =0;i<albumes.size();i++) {
                                 Log.d("Album", albumes.getDocuments().get(i).get("tituloAlbum").toString() + ": " +
                                         albumes.getDocuments().get(i).get("caratula").toString());
 
@@ -114,7 +146,7 @@ public class HomeFragment extends Fragment {
 
                                 }
 
-                            }
+                            } */
                             progressBar.setVisibility(View.INVISIBLE);
                             enlazarAdapter();
 

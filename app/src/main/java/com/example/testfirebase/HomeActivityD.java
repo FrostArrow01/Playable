@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -87,8 +88,10 @@ public class HomeActivityD extends AppCompatActivity  {
         binding.appBarHomeActivityD.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Próximamente: reproducir musica aleatoria", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(view.getContext(), CancionesActivity.class);
+                i.putExtra("tituloAlbum", "Random");
+                i.putExtra("caratula", "Random");
+                view.getContext().startActivity(i);
             }
         });
         drawer = binding.drawerLayout;
@@ -104,7 +107,6 @@ public class HomeActivityD extends AppCompatActivity  {
         NavigationUI.setupWithNavController(navigationView, navController);
 
     }
-
 
     //Se ejecuta cada vez que se abre el drawer
     @Override

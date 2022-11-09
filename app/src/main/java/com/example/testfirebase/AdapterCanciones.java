@@ -8,16 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.testfirebase.Utils.Utils;
 import com.example.testfirebase.models.Cancion;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,23 +27,29 @@ import java.util.List;
 public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.ViewHolder> {
 
     private List<Cancion> cancionesList;
+    private Context context;
     private List<String> duraciones = new ArrayList<>();
+    private List<Long> duracionesLong = new ArrayList<>();
+
     private String caratula;
     private LayoutInflater inflater;
-    private Button reproducir;
     private RecyclerItemClickListener listener;
+    private int selectedPosition;
 
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
     public AdapterCanciones(Context context, List<Cancion> cancionesList, String caratula, RecyclerItemClickListener listener){
         this.cancionesList = cancionesList;
+        this.context = context;
         for (Cancion cancion: cancionesList) {
             try {
                 mediaPlayer.reset();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.setDataSource(cancion.url);
                 mediaPlayer.prepare();
-                duraciones.add(String.valueOf(Utils.convertDuration(mediaPlayer.getDuration())));
+                duraciones.add(Utils.convertDuration(mediaPlayer.getDuration()));
+                duracionesLong.add((long) mediaPlayer.getDuration());
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -57,7 +64,6 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.canciones_grid_layout,parent,false);
-        reproducir = view.findViewById(R.id.button3);
         return new ViewHolder(view);
     }
 
@@ -72,7 +78,18 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
             holder.tituloCancion.setText(cancionesList.get(position).titulo);
             holder.duracionCancion.setText(duraciones.get(position));
 
+            if (selectedPosition == position){
+                holder.fondo.setCardBackgroundColor(ContextCompat.getColor(context, R.color.AmarilloF) );
+                holder.tituloCancion.setTextColor(ContextCompat.getColor(context, R.color.AzulMarinoF));
+                holder.duracionCancion.setTextColor(ContextCompat.getColor(context, R.color.AzulMarinoF));
+                holder.estasonando.setVisibility(View.VISIBLE);
 
+            }else{
+                holder.fondo.setCardBackgroundColor(ContextCompat.getColor(context, R.color.AzulMarinoFV));
+                holder.tituloCancion.setTextColor(ContextCompat.getColor(context, R.color.GrisF));
+                holder.duracionCancion.setTextColor(ContextCompat.getColor(context, R.color.GrisF));
+                holder.estasonando.setVisibility(View.INVISIBLE);
+            }
 
          /*  holder.reproducir.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,23 +111,10 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
                 }
             }); */
 
-            holder.bind(cancionesList.get(position),listener);
+            holder.bind(cancionesList.get(position), Long.valueOf(duracionesLong.get(position)),listener);
 
 
         }
-    }
-
-    public void musicPlay(int position) throws IOException {
-        mediaPlayer.setDataSource(cancionesList.get(position).url);
-        mediaPlayer.prepare();
-        mediaPlayer.start();
-    }
-
-    public void musicStop(int position){
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        mediaPlayer = null;
-        mediaPlayer = new MediaPlayer();
     }
 
     @Override
@@ -123,30 +127,42 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tituloCancion, duracionCancion;
+        TextView tituloCancion, duracionCancion, estasonando;
         ImageView imagenCancion;
-        Button reproducir;
+        CardView fondo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tituloCancion = itemView.findViewById(R.id.tituloCancion);
             imagenCancion = itemView.findViewById(R.id.imagenCancion);
             duracionCancion = itemView.findViewById(R.id.duracionCancion);
-            reproducir = itemView.findViewById(R.id.button3);
+            estasonando = itemView.findViewById(R.id.estasonando);
+            fondo = itemView.findViewById(R.id.fondo);
         }
 
-        public void bind(Cancion cancion, RecyclerItemClickListener listener){
+        public void bind(Cancion cancion, Long duracion, RecyclerItemClickListener listener){
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onClickListener(cancion, getLayoutPosition());
+                    try {
+                        listener.onClickListener(cancion, duracion,getLayoutPosition());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
     }
 
     public interface RecyclerItemClickListener{
-        void onClickListener(Cancion cancion, int position);
+        void onClickListener(Cancion cancion, Long duracion, int position) throws IOException;
     }
 
+    public void setSelectedPosition(int selectedPosition) {
+        this.selectedPosition = selectedPosition;
+    }
+
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
 }

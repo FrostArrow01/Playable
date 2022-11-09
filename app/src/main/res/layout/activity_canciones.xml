@@ -29,4 +29,6 @@
         </LinearLayout>
     </ScrollView>
 
+    <include layout="@layout/toolbar" android:id="@+id/toolbar"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

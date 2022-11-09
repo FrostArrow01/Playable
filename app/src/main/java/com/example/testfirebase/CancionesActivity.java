@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.util.List;
 
 public class CancionesActivity extends AppCompatActivity {
@@ -37,6 +41,8 @@ public class CancionesActivity extends AppCompatActivity {
 
     private RecyclerView cancionesRecy;
     private AdapterCanciones adapterCanciones;
+    private MediaPlayer mp;
+    private long currentSongLength;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +122,60 @@ public class CancionesActivity extends AppCompatActivity {
     public void enlazarAdapter(){
         adapterCanciones = new AdapterCanciones(this, cancionesList, caratula, new AdapterCanciones.RecyclerItemClickListener() {
             @Override
-            public void onClickListener(Cancion cancion, int position) {
-                Toast.makeText(CancionesActivity.this, cancion.getTitulo(), Toast.LENGTH_SHORT).show();
+            public void onClickListener(Cancion cancion, Long duracion ,int position) throws IOException {
+               /* MediaPlayer mp = new MediaPlayer();
+                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mp.setDataSource(cancion.url);
+                mp.prepare();
+                mp.start();*/
+                prepareSong(cancion, duracion);
+
+                //cambiar
+                changeSelectedSong(position);
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1, GridLayoutManager.VERTICAL, false);
         cancionesRecy.setLayoutManager(gridLayoutManager);
+        adapterCanciones.setSelectedPosition(-1);
         cancionesRecy.setAdapter(adapterCanciones);
+
+        //Inicializacion de mediaplayer
+        mp = new MediaPlayer();
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                togglePlay(mp);
+            }
+        });
+    }
+
+    public void prepareSong(Cancion cancion, Long duracion){
+        currentSongLength = duracion;
+
+        mp.reset();
+        try {
+            mp.setDataSource(cancion.url);
+            mp.prepareAsync();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void togglePlay(MediaPlayer mediaPlayer){
+        if(mediaPlayer.isPlaying()){
+            mp.stop();
+            mp.reset();
+        }else{
+            mp.start();
+        }
+    }
+
+    public void changeSelectedSong(int index){
+        adapterCanciones.notifyItemChanged(adapterCanciones.getSelectedPosition());
+        adapterCanciones.setSelectedPosition(index);
+        adapterCanciones.notifyItemChanged(index);
+
     }
 
 }

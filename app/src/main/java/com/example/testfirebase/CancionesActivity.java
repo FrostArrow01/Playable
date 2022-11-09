@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,10 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testfirebase.models.Album;
@@ -43,6 +48,9 @@ public class CancionesActivity extends AppCompatActivity {
     private AdapterCanciones adapterCanciones;
     private MediaPlayer mp;
     private long currentSongLength;
+    private ProgressBar progressBar, pb_loader;
+    private TextView tb_title, iv_time;
+    private ImageView iv_pause;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,11 @@ public class CancionesActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         cancionesRecy = findViewById(R.id.cancionesRecy);
+
+        //Para el toolbar
+        progressBar = findViewById(R.id.pb_loader);
+        tb_title = findViewById(R.id.tb_title);
+        iv_pause = findViewById(R.id.iv_pause);
 
         Intent intent = getIntent();
         titulo =  intent.getStringExtra("tituloAlbum");
@@ -123,11 +136,6 @@ public class CancionesActivity extends AppCompatActivity {
         adapterCanciones = new AdapterCanciones(this, cancionesList, caratula, new AdapterCanciones.RecyclerItemClickListener() {
             @Override
             public void onClickListener(Cancion cancion, Long duracion ,int position) throws IOException {
-               /* MediaPlayer mp = new MediaPlayer();
-                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mp.setDataSource(cancion.url);
-                mp.prepare();
-                mp.start();*/
                 prepareSong(cancion, duracion);
 
                 //cambiar
@@ -152,6 +160,10 @@ public class CancionesActivity extends AppCompatActivity {
 
     public void prepareSong(Cancion cancion, Long duracion){
         currentSongLength = duracion;
+        pb_loader.setVisibility(View.VISIBLE);
+        tb_title.setVisibility(View.GONE);
+        tb_title.setText(cancion.titulo);
+
 
         mp.reset();
         try {
@@ -166,8 +178,12 @@ public class CancionesActivity extends AppCompatActivity {
         if(mediaPlayer.isPlaying()){
             mp.stop();
             mp.reset();
+            iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_pause_circle_24));
         }else{
+            pb_loader.setVisibility(View.GONE);
+            tb_title.setVisibility(View.VISIBLE);
             mp.start();
+            iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_play_circle_24));
         }
     }
 

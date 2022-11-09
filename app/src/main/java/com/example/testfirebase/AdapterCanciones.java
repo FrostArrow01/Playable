@@ -35,6 +35,8 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
     private LayoutInflater inflater;
     private RecyclerItemClickListener listener;
     private int selectedPosition;
+    private ProgressBar progressBar, pb_loader;
+    private TextView tb_title, tv_duration;
 
 
     private MediaPlayer mediaPlayer = new MediaPlayer();

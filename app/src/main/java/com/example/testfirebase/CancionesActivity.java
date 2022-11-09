@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.testfirebase.models.Album;
 import com.example.testfirebase.models.Cancion;
@@ -113,7 +114,12 @@ public class CancionesActivity extends AppCompatActivity {
     }
 
     public void enlazarAdapter(){
-        adapterCanciones = new AdapterCanciones(this, cancionesList, caratula);
+        adapterCanciones = new AdapterCanciones(this, cancionesList, caratula, new AdapterCanciones.RecyclerItemClickListener() {
+            @Override
+            public void onClickListener(Cancion cancion, int position) {
+                Toast.makeText(CancionesActivity.this, cancion.getTitulo(), Toast.LENGTH_SHORT).show();
+            }
+        });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1, GridLayoutManager.VERTICAL, false);
         cancionesRecy.setLayoutManager(gridLayoutManager);
         cancionesRecy.setAdapter(adapterCanciones);

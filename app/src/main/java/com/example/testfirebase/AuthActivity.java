@@ -170,7 +170,7 @@ public class AuthActivity extends AppCompatActivity {
                                 guardarUsuario("BASIC",email.getText().toString());
                                 successI(email.getText().toString(), "BASIC");
                             }else {
-                                Snackbar.make(findViewById(android.R.id.content), "Error al autenticar el usuario, puede que el usuario ya exista", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(findViewById(android.R.id.content), "Error al autenticar el usuario, pruebe con otro correo", Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });

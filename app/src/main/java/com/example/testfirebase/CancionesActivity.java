@@ -48,6 +48,7 @@ public class CancionesActivity extends AppCompatActivity {
     private List<Cancion> cancionesList;
     private Album albumRandom;
 
+    //Recyclerview y toolbar
     private RecyclerView cancionesRecy;
     private AdapterCanciones adapterCanciones;
     private MediaPlayer mp;
@@ -55,8 +56,9 @@ public class CancionesActivity extends AppCompatActivity {
     private int currentIndex;
     private ProgressBar pb_loader;
     private TextView tb_title, iv_time;
-    private ImageView iv_pause;
+    private ImageView iv_pause, iv_previous, iv_next;
     private SeekBar seekBar;
+    private boolean firstLaunch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +71,12 @@ public class CancionesActivity extends AppCompatActivity {
         //Para el toolbar
         tb_title = findViewById(R.id.tb_title);
         iv_pause = findViewById(R.id.iv_pause);
+        iv_next = findViewById(R.id.iv_next);
+        iv_previous = findViewById(R.id.iv_previous);
         pb_loader = findViewById(R.id.pb_loader);
         iv_time = findViewById(R.id.iv_time);
         seekBar = findViewById(R.id.seekbar);
+
 
         Intent intent = getIntent();
         titulo =  intent.getStringExtra("tituloAlbum");
@@ -97,6 +102,7 @@ public class CancionesActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
+        onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
@@ -145,6 +151,7 @@ public class CancionesActivity extends AppCompatActivity {
             @Override
             public void onClickListener(Cancion cancion, Long duracion ,int position) throws IOException {
                 currentSongLength = duracion;
+                firstLaunch = false;
                 prepareSong(cancion);
 
                 //cambiar
@@ -182,6 +189,11 @@ public class CancionesActivity extends AppCompatActivity {
 
         //gestion de seekbar
         handleSeekbar();
+
+        //controles
+        pushPlay();
+        pushPrevious();
+        pushNext();
     }
 
     public void prepareSong(Cancion cancion){
@@ -199,7 +211,7 @@ public class CancionesActivity extends AppCompatActivity {
         }catch (IOException e){
             e.printStackTrace();
         }
-    }
+    } //actualiza estilos y settea la cancion que se va a reproducir
 
     public void handleSeekbar(){
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -220,7 +232,7 @@ public class CancionesActivity extends AppCompatActivity {
 
             }
         });
-    }
+    } //actualiza la barra de progreso cada segundo
 
     public void togglePlay(MediaPlayer mediaPlayer){
         if(mediaPlayer.isPlaying()){
@@ -246,7 +258,7 @@ public class CancionesActivity extends AppCompatActivity {
             });
 
         }
-    }
+    } //inicia una cancion pausando la anterior
 
     public void changeSelectedSong(int index){
         currentIndex = index;
@@ -254,12 +266,75 @@ public class CancionesActivity extends AppCompatActivity {
         adapterCanciones.setSelectedPosition(currentIndex);
         adapterCanciones.notifyItemChanged(currentIndex);
 
+    } //ilumina la cancion que esta sonando
+
+    //controles play previous next
+    public void pushPlay(){
+        iv_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mp.isPlaying() && mp != null){
+                    iv_pause.setImageDrawable(ContextCompat.getDrawable(CancionesActivity.this, R.drawable.ic_baseline_play_circle_24));
+                    mp.pause();
+                }else{
+                    if(firstLaunch){
+                        Cancion cancion = cancionesList.get(0);
+                        changeSelectedSong(0);
+                        prepareSong(cancion);
+                    }else{
+                        mp.start();
+                        firstLaunch = false;
+                    }
+                    iv_pause.setImageDrawable(ContextCompat.getDrawable(CancionesActivity.this, R.drawable.ic_baseline_pause_circle_24));
+                }
+            }
+        });
+    }
+
+    public void pushPrevious(){
+        iv_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firstLaunch = false;
+                if(mp != null){
+                    if(currentIndex -1 >= 0){
+                        Cancion previous = cancionesList.get(currentIndex-1);
+                        changeSelectedSong(currentIndex-1);
+                        prepareSong(previous);
+                    }else{
+                        changeSelectedSong(cancionesList.size()-1);
+                        prepareSong(cancionesList.get(cancionesList.size()-1));
+
+                    }
+                }
+            }
+        });
+    }
+
+    public void pushNext(){
+        iv_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firstLaunch = false;
+                if(mp != null){
+                    if(currentIndex +1 < cancionesList.size()){
+                        Cancion siguiente = cancionesList.get(currentIndex+1);
+                        changeSelectedSong(currentIndex+1);
+                        prepareSong(siguiente);
+                    }else{
+                        changeSelectedSong(0);
+                        prepareSong(cancionesList.get(0));
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         mp.stop();
+        mp = new MediaPlayer();
         finish();
     }
 }

@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
@@ -21,12 +22,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testfirebase.Utils.Utils;
 import com.example.testfirebase.models.Album;
 import com.example.testfirebase.models.Cancion;
 import com.example.testfirebase.models.CancionDocument;
+import com.google.android.gms.common.util.AndroidUtilsLight;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,9 +52,11 @@ public class CancionesActivity extends AppCompatActivity {
     private AdapterCanciones adapterCanciones;
     private MediaPlayer mp;
     private long currentSongLength;
-    private ProgressBar progressBar, pb_loader;
+    private int currentIndex;
+    private ProgressBar pb_loader;
     private TextView tb_title, iv_time;
     private ImageView iv_pause;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +67,11 @@ public class CancionesActivity extends AppCompatActivity {
         cancionesRecy = findViewById(R.id.cancionesRecy);
 
         //Para el toolbar
-        progressBar = findViewById(R.id.pb_loader);
         tb_title = findViewById(R.id.tb_title);
         iv_pause = findViewById(R.id.iv_pause);
+        pb_loader = findViewById(R.id.pb_loader);
+        iv_time = findViewById(R.id.iv_time);
+        seekBar = findViewById(R.id.seekbar);
 
         Intent intent = getIntent();
         titulo =  intent.getStringExtra("tituloAlbum");
@@ -136,7 +144,8 @@ public class CancionesActivity extends AppCompatActivity {
         adapterCanciones = new AdapterCanciones(this, cancionesList, caratula, new AdapterCanciones.RecyclerItemClickListener() {
             @Override
             public void onClickListener(Cancion cancion, Long duracion ,int position) throws IOException {
-                prepareSong(cancion, duracion);
+                currentSongLength = duracion;
+                prepareSong(cancion);
 
                 //cambiar
                 changeSelectedSong(position);
@@ -156,13 +165,31 @@ public class CancionesActivity extends AppCompatActivity {
                 togglePlay(mp);
             }
         });
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if(currentIndex + 1 < cancionesList.size()){
+                    Cancion siguiente = cancionesList.get(currentIndex+1);
+                    changeSelectedSong(currentIndex+1);
+                    prepareSong(siguiente);
+                }else{
+                    Cancion siguiente = cancionesList.get(0);
+                    changeSelectedSong(0);
+                    prepareSong(siguiente);
+                }
+            }
+        });
+
+        //gestion de seekbar
+        handleSeekbar();
     }
 
-    public void prepareSong(Cancion cancion, Long duracion){
-        currentSongLength = duracion;
+    public void prepareSong(Cancion cancion){
         pb_loader.setVisibility(View.VISIBLE);
         tb_title.setVisibility(View.GONE);
-        tb_title.setText(cancion.titulo);
+        iv_time.setVisibility(View.GONE);
+        tb_title.setText(cancion.titulo + "  -  ");
+        iv_time.setText(Utils.convertDuration(currentSongLength));
 
 
         mp.reset();
@@ -174,24 +201,65 @@ public class CancionesActivity extends AppCompatActivity {
         }
     }
 
+    public void handleSeekbar(){
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if(mp != null && b){
+                    mp.seekTo(i*1000);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
     public void togglePlay(MediaPlayer mediaPlayer){
         if(mediaPlayer.isPlaying()){
             mp.stop();
             mp.reset();
-            iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_pause_circle_24));
+            //iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_play_circle_24));
         }else{
             pb_loader.setVisibility(View.GONE);
             tb_title.setVisibility(View.VISIBLE);
+            iv_time.setVisibility(View.VISIBLE);
             mp.start();
-            iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_play_circle_24));
+            iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_pause_circle_24));
+            Handler mHandler = new Handler();
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    seekBar.setMax((int) currentSongLength/1000);
+                    int mCurrentPosition = mediaPlayer.getCurrentPosition()/1000;
+                    seekBar.setProgress(mCurrentPosition);
+                    iv_time.setText(Utils.convertDuration((long) mediaPlayer.getCurrentPosition()));
+                    mHandler.postDelayed(this, 1000);
+                }
+            });
+
         }
     }
 
     public void changeSelectedSong(int index){
+        currentIndex = index;
         adapterCanciones.notifyItemChanged(adapterCanciones.getSelectedPosition());
-        adapterCanciones.setSelectedPosition(index);
-        adapterCanciones.notifyItemChanged(index);
+        adapterCanciones.setSelectedPosition(currentIndex);
+        adapterCanciones.notifyItemChanged(currentIndex);
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mp.stop();
+        finish();
+    }
 }

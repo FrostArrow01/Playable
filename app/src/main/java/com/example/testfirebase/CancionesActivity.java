@@ -15,7 +15,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,13 +23,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.testfirebase.Utils.Utils;
 import com.example.testfirebase.models.Album;
 import com.example.testfirebase.models.Cancion;
 import com.example.testfirebase.models.CancionDocument;
-import com.google.android.gms.common.util.AndroidUtilsLight;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -51,14 +48,14 @@ public class CancionesActivity extends AppCompatActivity {
     //Recyclerview y toolbar
     private RecyclerView cancionesRecy;
     private AdapterCanciones adapterCanciones;
-    private MediaPlayer mp;
+    private MediaPlayer mediaPlayer;
     private long currentSongLength;
     private int currentIndex;
     private ProgressBar pb_loader;
     private TextView tb_title, iv_time;
     private ImageView iv_pause, iv_previous, iv_next;
     private SeekBar seekBar;
-    private boolean firstLaunch;
+    private boolean firstLaunch = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +74,10 @@ public class CancionesActivity extends AppCompatActivity {
         iv_time = findViewById(R.id.iv_time);
         seekBar = findViewById(R.id.seekbar);
 
-
+        //Coger random o uno especifico depende de donde venga
         Intent intent = getIntent();
         titulo =  intent.getStringExtra("tituloAlbum");
         caratula = intent.getStringExtra("caratula");
-
         if(titulo.equals("Random")){
             getAlbumAleatorio();
         }else{
@@ -164,25 +160,33 @@ public class CancionesActivity extends AppCompatActivity {
         cancionesRecy.setAdapter(adapterCanciones);
 
         //Inicializacion de mediaplayer
-        mp = new MediaPlayer();
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 togglePlay(mp);
             }
         });
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 if(currentIndex + 1 < cancionesList.size()){
                     Cancion siguiente = cancionesList.get(currentIndex+1);
                     changeSelectedSong(currentIndex+1);
-                    prepareSong(siguiente);
+                    try {
+                        prepareSong(siguiente);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }else{
                     Cancion siguiente = cancionesList.get(0);
                     changeSelectedSong(0);
-                    prepareSong(siguiente);
+                    try {
+                        prepareSong(siguiente);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -196,7 +200,8 @@ public class CancionesActivity extends AppCompatActivity {
         pushNext();
     }
 
-    public void prepareSong(Cancion cancion){
+    public void prepareSong(Cancion cancion) throws IOException {
+        currentSongLength = cancion.getDuration();
         pb_loader.setVisibility(View.VISIBLE);
         tb_title.setVisibility(View.GONE);
         iv_time.setVisibility(View.GONE);
@@ -204,10 +209,10 @@ public class CancionesActivity extends AppCompatActivity {
         iv_time.setText(Utils.convertDuration(currentSongLength));
 
 
-        mp.reset();
+        mediaPlayer.reset();
         try {
-            mp.setDataSource(cancion.url);
-            mp.prepareAsync();
+            mediaPlayer.setDataSource(cancion.url);
+            mediaPlayer.prepareAsync();
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -217,8 +222,8 @@ public class CancionesActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(mp != null && b){
-                    mp.seekTo(i*1000);
+                if(mediaPlayer != null && b){
+                    mediaPlayer.seekTo(i*1000);
                 }
             }
 
@@ -232,10 +237,10 @@ public class CancionesActivity extends AppCompatActivity {
 
             }
         });
-    } //actualiza la barra de progreso cada segundo
+    } //actualiza la musica al mover la barra
 
-    public void togglePlay(MediaPlayer mediaPlayer){
-        if(mediaPlayer.isPlaying()){
+    public void togglePlay(MediaPlayer mp){
+        if(mp.isPlaying()){
             mp.stop();
             mp.reset();
             //iv_pause.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_play_circle_24));
@@ -261,10 +266,11 @@ public class CancionesActivity extends AppCompatActivity {
     } //inicia una cancion pausando la anterior
 
     public void changeSelectedSong(int index){
-        currentIndex = index;
         adapterCanciones.notifyItemChanged(adapterCanciones.getSelectedPosition());
+        currentIndex = index;
         adapterCanciones.setSelectedPosition(currentIndex);
         adapterCanciones.notifyItemChanged(currentIndex);
+
 
     } //ilumina la cancion que esta sonando
 
@@ -273,16 +279,20 @@ public class CancionesActivity extends AppCompatActivity {
         iv_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mp.isPlaying() && mp != null){
+                if(mediaPlayer.isPlaying() && mediaPlayer != null){
                     iv_pause.setImageDrawable(ContextCompat.getDrawable(CancionesActivity.this, R.drawable.ic_baseline_play_circle_24));
-                    mp.pause();
+                    mediaPlayer.pause();
                 }else{
                     if(firstLaunch){
                         Cancion cancion = cancionesList.get(0);
                         changeSelectedSong(0);
-                        prepareSong(cancion);
+                        try {
+                            prepareSong(cancion);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }else{
-                        mp.start();
+                        mediaPlayer.start();
                         firstLaunch = false;
                     }
                     iv_pause.setImageDrawable(ContextCompat.getDrawable(CancionesActivity.this, R.drawable.ic_baseline_pause_circle_24));
@@ -296,14 +306,22 @@ public class CancionesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 firstLaunch = false;
-                if(mp != null){
+                if(mediaPlayer != null){
                     if(currentIndex -1 >= 0){
                         Cancion previous = cancionesList.get(currentIndex-1);
                         changeSelectedSong(currentIndex-1);
-                        prepareSong(previous);
+                        try {
+                            prepareSong(previous);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }else{
                         changeSelectedSong(cancionesList.size()-1);
-                        prepareSong(cancionesList.get(cancionesList.size()-1));
+                        try {
+                            prepareSong(cancionesList.get(cancionesList.size()-1));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 }
@@ -316,14 +334,22 @@ public class CancionesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 firstLaunch = false;
-                if(mp != null){
+                if(mediaPlayer != null){
                     if(currentIndex +1 < cancionesList.size()){
                         Cancion siguiente = cancionesList.get(currentIndex+1);
                         changeSelectedSong(currentIndex+1);
-                        prepareSong(siguiente);
+                        try {
+                            prepareSong(siguiente);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }else{
                         changeSelectedSong(0);
-                        prepareSong(cancionesList.get(0));
+                        try {
+                            prepareSong(cancionesList.get(0));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -333,8 +359,9 @@ public class CancionesActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mp.stop();
-        mp = new MediaPlayer();
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        mediaPlayer = new MediaPlayer();
         finish();
     }
 }

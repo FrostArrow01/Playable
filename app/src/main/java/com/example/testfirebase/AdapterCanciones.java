@@ -44,15 +44,10 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
     public AdapterCanciones(Context context, List<Cancion> cancionesList, String caratula, RecyclerItemClickListener listener){
         this.cancionesList = cancionesList;
         this.context = context;
-        for (Cancion cancion: cancionesList) {
+        for (Cancion cancion: cancionesList) { //se recogen la duracion de las canciones en dos formatos
             try {
-                mediaPlayer.reset();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mediaPlayer.setDataSource(cancion.url);
-                mediaPlayer.prepare();
-                duraciones.add(Utils.convertDuration(mediaPlayer.getDuration()));
-                duracionesLong.add((long) mediaPlayer.getDuration());
-
+                duraciones.add(Utils.convertDuration(cancion.getDuration()));
+                duracionesLong.add(cancion.getDuration());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -92,26 +87,6 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
                 holder.duracionCancion.setTextColor(ContextCompat.getColor(context, R.color.GrisF));
                 holder.estasonando.setVisibility(View.INVISIBLE);
             }
-
-         /*  holder.reproducir.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        try {
-                            if (!mediaPlayer.isPlaying()){
-                               musicPlay(position);
-                               holder.reproducir.setText("Detener");
-                            }else if (mediaPlayer.isPlaying()){
-                               musicStop(position);
-                               holder.reproducir.setText("Reproducir");
-                            }
-
-                        }catch (IOException e){
-                            e.printStackTrace();
-                        }
-
-                }
-            }); */
 
             holder.bind(cancionesList.get(position), Long.valueOf(duracionesLong.get(position)),listener);
 

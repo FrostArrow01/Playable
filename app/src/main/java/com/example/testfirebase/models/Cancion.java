@@ -1,5 +1,9 @@
 package com.example.testfirebase.models;
 
+import android.media.MediaPlayer;
+
+import java.io.IOException;
+
 public class Cancion {
     public String titulo;
     public String url;
@@ -12,7 +16,16 @@ public class Cancion {
         this.titulo = titulo;
     }
 
-    public Cancion() {
+    public Long getDuration() throws IOException {
+        MediaPlayer mp = new MediaPlayer();
+
+            mp.setDataSource(url);
+            mp.prepare();
+
+        return Long.valueOf(mp.getDuration());
+    }
+
+    public Cancion(){
 
     }
 

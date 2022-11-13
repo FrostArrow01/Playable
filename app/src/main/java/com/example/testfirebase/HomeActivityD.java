@@ -169,7 +169,7 @@ public class HomeActivityD extends AppCompatActivity  {
                             biografiaD.setText(biografia);
                         }
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        if(user.getPhotoUrl() != null){
+                        if(user.getPhotoUrl() != null && imageButton != null) {
                             Glide.with(getApplicationContext())
                                     .load(user.getPhotoUrl())
                                     .into(imageButton);

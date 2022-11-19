@@ -55,6 +55,7 @@ public class CancionesActivity extends AppCompatActivity {
     private TextView tb_title, iv_time;
     private ImageView iv_pause, iv_previous, iv_next;
     private SeekBar seekBar;
+    private ProgressBar progressBar2;
     private boolean firstLaunch = true;
 
     @Override
@@ -73,6 +74,7 @@ public class CancionesActivity extends AppCompatActivity {
         pb_loader = findViewById(R.id.pb_loader);
         iv_time = findViewById(R.id.iv_time);
         seekBar = findViewById(R.id.seekbar);
+        progressBar2 = findViewById(R.id.progressBar2);
 
         //Coger random o uno especifico depende de donde venga
         Intent intent = getIntent();
@@ -108,6 +110,7 @@ public class CancionesActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            progressBar2.setVisibility(View.INVISIBLE);
                             if (task.isSuccessful()) {
                                 album = task.getResult();
                                 cancionesList = album.getDocuments().get(0).toObject(CancionDocument.class).getCanciones();
@@ -127,6 +130,7 @@ public class CancionesActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        progressBar2.setVisibility(View.INVISIBLE);
                         if (task.isSuccessful()) {
                             albumes = task.getResult();
                             int numAl = (int) (Math.random()*albumes.size());
@@ -174,6 +178,7 @@ public class CancionesActivity extends AppCompatActivity {
                 if(currentIndex + 1 < cancionesList.size()){
                     Cancion siguiente = cancionesList.get(currentIndex+1);
                     changeSelectedSong(currentIndex+1);
+
                     try {
                         prepareSong(siguiente);
                     } catch (IOException e) {

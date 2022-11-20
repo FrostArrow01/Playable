@@ -8,10 +8,11 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_baseline_music_note_24"
             android:title="@string/menu_home" />
+
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_baseline_inventory_24"
-            android:title="@string/menu_gallery" />
+            android:icon="@drawable/ic_baseline_people_alt_24"
+            android:title="@string/menu_social" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_baseline_person_24"
@@ -19,19 +20,18 @@
 
     </group>
 
-    <item android:title="Otros">
-        <menu>
-            <item
-                android:id="@+id/nav_ajustes"
-                android:icon="@drawable/ic_baseline_settings_24"
-                android:title="@string/menu_ajustes" />
+        <item android:title="Otros">
+            <menu>
+                <item
+                    android:id="@+id/nav_ajustes"
+                    android:icon="@drawable/ic_baseline_settings_24"
+                    android:title="@string/menu_ajustes" />
 
-            <item
-                android:id="@+id/nav_salir"
-                android:icon="@drawable/ic_baseline_logout_24"
-                android:title="@string/menu_salir" />
-        </menu>
+                <item
+                    android:id="@+id/nav_salir"
+                    android:icon="@drawable/ic_baseline_logout_24"
+                    android:title="@string/menu_salir" />
+            </menu>
 
-    </item>
-
+        </item>
 </menu>

@@ -60,6 +60,7 @@ public class HomeActivityD extends AppCompatActivity  {
     boolean doubleBackToExitPressedOnce = false;
     private DrawerLayout drawer;
     private NavigationMenuItemView nav_salir, nav_ajustes;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,9 @@ public class HomeActivityD extends AppCompatActivity  {
 
         db = FirebaseFirestore.getInstance();
         getUserandBio();
+        if(user.getPhotoUrl() != null){
+            db.collection("users").document(email).update("foto", user.getPhotoUrl());
+        }
 
         //Shared preferences
         preferences = (SharedPreferences) getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
@@ -99,7 +103,7 @@ public class HomeActivityD extends AppCompatActivity  {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_ajustes, R.id.nav_salir)
+                R.id.nav_home,  R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_ajustes, R.id.nav_salir)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);

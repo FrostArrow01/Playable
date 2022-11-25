@@ -31,14 +31,18 @@
             android:name=".HomeActivityD"
             android:exported="false"
             android:label="@string/title_activity_home_d"
-            android:theme="@style/SplashTheme.NoActionBar">
+            android:theme="@style/SplashTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".AuthActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

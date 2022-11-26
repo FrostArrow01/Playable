@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -44,7 +45,8 @@ import java.util.HashMap;
 public class AuthActivity extends AppCompatActivity {
     private String emailR, passwordR, providerR;
     public EditText email, password;
-    public Button signup, login;
+    public Button  login;
+    public ImageView signup;
     private SharedPreferences preferences;
     private GoogleSignInOptions googleConf;
     private GoogleSignInClient googleClient;
@@ -64,8 +66,11 @@ public class AuthActivity extends AppCompatActivity {
         signup = findViewById(R.id.signupB);
         login = findViewById(R.id.loginB);
 
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#fbdc4c")));
-        setTitle(Html.fromHtml("<font color=\"black\">"+"Autenticación" + "</font>"));
+        /*getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#fbdc4c")));
+        setTitle(Html.fromHtml("<font color=\"black\">"+"Autenticación" + "</font>"));*/
+
+        getSupportActionBar().hide();
+
 
         session();
     }
@@ -159,8 +164,15 @@ public class AuthActivity extends AppCompatActivity {
         }
     } //onActivityResul
 
+    //popup registrarse
+    public void popUp(View view){
+        Intent popupWindow = new Intent(AuthActivity.this, PopupResigtrarse.class);
+        startActivity(popupWindow);
+
+    }
+
     //Login con correo y contraseña
-    public void signup(View view){
+    public void signup(){
         if(!email.getText().toString().matches("") && !password.getText().toString().matches("")){
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -8,11 +8,13 @@
     tools:context=".AuthActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,11 +27,15 @@
             android:layout_height="201dp"
             app:srcCompat="@drawable/playablelogo" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/playabletitletext" />
+            android:layout_gravity="center"
+            android:fontFamily="@font/franchise"
+            android:gravity="center"
+            android:text="PLAYABLE"
+            android:textSize="100sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -63,6 +69,7 @@
             android:id="@+id/biografiaDrawer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top"
             android:onClick="recuperarContrasenia"
             android:text=" ¿Has olvidado tu contraseña?"
             android:textColor="@color/GrisDiscreto" />
@@ -72,55 +79,75 @@
             android:layout_height="15px"
             android:onClick="recuperarContrasenia" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/loginB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="3dp"
+            android:onClick="login"
+            android:text="Iniciar Sesión"
+            android:textColor="@color/AzulMarinoF" />
 
-            <Button
-                android:id="@+id/signupB"
-                android:layout_width="35px"
-                android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:onClick="signup"
-                android:text="Registrarme"
-                android:textColor="@color/AzulMarinoF" />
+        <!--<Button
+            android:id="@+id/signupB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/buttoncrearcuenta"
+            android:onClick="popUp"
+            android:text="Crear cuenta"
+            android:textColor="@color/AzulMarinoF" />-->
 
-            <Button
-                android:id="@+id/loginB"
-                android:layout_width="35px"
-                android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:onClick="login"
-                android:text="Entrar"
-                android:textColor="@color/AzulMarinoF" />
-        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15px"
+            android:onClick="recuperarContrasenia" />
+
+        <TextView
+            android:id="@+id/biografiaDrawer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="━━━━━━━━ O registrate con ━━━━━━━━ "
+            android:textColor="@color/GrisDiscreto" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="35px"
+            android:onClick="recuperarContrasenia" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="313px"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_weight="1"
-                android:onClick="loginGoogle"
-                android:text="Iniciar Sesión con Google"
-                android:textColor="@color/AzulMarinoF" />
-
-            <ImageView
+            <ImageButton
                 android:id="@+id/imageView2"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="7dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/buttongoogle"
+                android:onClick="popUp"
+                android:padding="10dp"
+                android:scaleType="fitStart"
+                android:src="@android:drawable/ic_dialog_email" />
+
+            <Space
+                android:layout_width="30px"
+                android:layout_height="25px"
+                android:onClick="recuperarContrasenia" />
+
+            <ImageButton
+                android:id="@+id/signupB"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/buttongoogle"
                 android:onClick="loginGoogle"
-                app:srcCompat="@drawable/logogoogle" />
+                android:padding="12dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/googleg_standard_color_18" />
 
         </LinearLayout>
 

@@ -17,6 +17,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="TestFirebase.popUpRegistrarse">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
 
     <style name="SplashTheme" parent="Theme.TestFirebase">
         <item name="android:windowBackground">@drawable/splash_screen</item>
@@ -25,6 +30,7 @@
     <style name="Popup" parent="Theme.TestFirebase">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsFloating">true</item>
     </style>
 
     <style name="SplashTheme.NoActionBar">

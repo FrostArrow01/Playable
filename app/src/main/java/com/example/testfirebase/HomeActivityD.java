@@ -116,7 +116,8 @@ public class HomeActivityD extends AppCompatActivity  {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);
-        getUserandBio();
+        getUserandBioAndSet();
+
 
         nav_salir = findViewById(R.id.nav_salir);
         nav_salir.setOnClickListener(new View.OnClickListener() { //funcion para el boton salir
@@ -163,11 +164,27 @@ public class HomeActivityD extends AppCompatActivity  {
                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                    }
+                });
+    }
+
+    public void getUserandBioAndSet(){
+        db.collection("users").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+                        usuario = it.get("usuario").toString();
+                        biografia = it.get("biografia").toString();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         usuarioD = findViewById(R.id.usuarioDrawer);
                         biografiaD = findViewById(R.id.biografiaDrawer);
                         imageButton = findViewById(R.id.imagenDrawer);
                         if(usuario.matches("") || biografia.matches("")){
-                            Toast.makeText(HomeActivityD.this, "Ve a la pestaña mi perfil para completar tus datos", Toast.LENGTH_SHORT).show();
+
                         }else{
                             usuarioD.setText(usuario);
                             biografiaD.setText(biografia);

@@ -180,7 +180,7 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onSuccess(Uri uri) {
                 setUserProfileUrl(uri);
-                db.collection("users").document(emailPre).update("foto", user.getPhotoUrl());
+                db.collection("users").document(emailPre).update("foto", uri);
             }
         });
     }

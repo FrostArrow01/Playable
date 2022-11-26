@@ -25,6 +25,8 @@
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
             android:layout_height="201dp"
+            android:cropToPadding="false"
+            android:padding="20dp"
             app:srcCompat="@drawable/playablelogo" />
 
         <TextView
@@ -108,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="━━━━━━━━ O registrate con ━━━━━━━━ "
+            android:text="━━━━━━━━ o registrate con ━━━━━━━━ "
             android:textColor="@color/GrisDiscreto" />
 
         <Space

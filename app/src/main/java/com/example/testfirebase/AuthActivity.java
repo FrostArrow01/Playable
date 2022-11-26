@@ -171,26 +171,6 @@ public class AuthActivity extends AppCompatActivity {
 
     }
 
-    //Login con correo y contraseña
-    public void signup(){
-        if(!email.getText().toString().matches("") && !password.getText().toString().matches("")){
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                guardarUsuario("BASIC",email.getText().toString());
-                                successI(email.getText().toString(), "BASIC");
-                            }else {
-                                Snackbar.make(findViewById(android.R.id.content), "Error al autenticar el usuario, pruebe con otro correo", Snackbar.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-        }else{
-            Snackbar.make(findViewById(android.R.id.content), "Tienes que rellenar todos los campos", Snackbar.LENGTH_LONG).show();
-        }
-    }
-
     public void login(View view){
         if(!email.getText().toString().matches("") && !password.getText().toString().matches("")){
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())

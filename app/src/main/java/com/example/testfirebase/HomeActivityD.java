@@ -164,7 +164,12 @@ public class HomeActivityD extends AppCompatActivity  {
                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
+                        if(usuario.equals("")){
+                            String emailC = email;
+                            int index = email.indexOf("@");
+                            emailC = emailC.substring(0,index);
+                            db.collection("users").document(email).update("usuario", emailC);
+                        }
                     }
                 });
     }
@@ -183,8 +188,14 @@ public class HomeActivityD extends AppCompatActivity  {
                         usuarioD = findViewById(R.id.usuarioDrawer);
                         biografiaD = findViewById(R.id.biografiaDrawer);
                         imageButton = findViewById(R.id.imagenDrawer);
-                        if(usuario.matches("") || biografia.matches("")){
-
+                        if(usuario.matches("")){
+                            if(usuario.equals("")){
+                                String emailC = email;
+                                int index = email.indexOf("@");
+                                emailC = emailC.substring(0,index);
+                                db.collection("users").document(email).update("usuario", emailC);
+                                biografiaD.setText("No tienes biografía.");
+                            }
                         }else{
                             usuarioD.setText(usuario);
                             biografiaD.setText(biografia);

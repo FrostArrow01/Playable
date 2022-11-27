@@ -93,7 +93,7 @@ public class AuthActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Snackbar.make(view, "Se ha enviado un email para recuperar tu contraseña", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, "Se ha enviado un email para cambiar tu contraseña", Snackbar.LENGTH_LONG).show();
                             }else{
                                 Snackbar.make(view, "El usuario con el correo: \"+email.getText().toString()+\" no existe", Snackbar.LENGTH_LONG).show();
                             }

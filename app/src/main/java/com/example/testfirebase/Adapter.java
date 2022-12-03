@@ -39,7 +39,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
     public Adapter(Context context, QuerySnapshot albumes){
         this.albumes = albumes;
-        for (int i=0;i<albumes.size();i++){
+        for (int i=0;i<albumes.size();i++){ //conversion de QuerySnapshot a objectos Album
             album = new Album();
             album.setCaratula(albumes.getDocuments().get(i).get("caratula").toString());
             album.setTitulo(albumes.getDocuments().get(i).get("tituloAlbum").toString());

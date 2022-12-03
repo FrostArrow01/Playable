@@ -9,14 +9,18 @@ import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -41,7 +45,8 @@ import java.util.HashMap;
 public class AuthActivity extends AppCompatActivity {
     private String emailR, passwordR, providerR;
     public EditText email, password;
-    public Button signup, login;
+    public Button  login;
+    public ImageView signup;
     private SharedPreferences preferences;
     private GoogleSignInOptions googleConf;
     private GoogleSignInClient googleClient;
@@ -53,7 +58,6 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        setTitle("Autenticación");
         db = FirebaseFirestore.getInstance();
 
 
@@ -61,6 +65,12 @@ public class AuthActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         signup = findViewById(R.id.signupB);
         login = findViewById(R.id.loginB);
+
+        /*getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#fbdc4c")));
+        setTitle(Html.fromHtml("<font color=\"black\">"+"Autenticación" + "</font>"));*/
+
+        getSupportActionBar().hide();
+
 
         session();
     }
@@ -83,7 +93,7 @@ public class AuthActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Snackbar.make(view, "Se ha enviado un email para recuperar tu contraseña", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, "Se ha enviado un email para cambiar tu contraseña", Snackbar.LENGTH_LONG).show();
                             }else{
                                 Snackbar.make(view, "El usuario con el correo: \"+email.getText().toString()+\" no existe", Snackbar.LENGTH_LONG).show();
                             }
@@ -154,24 +164,11 @@ public class AuthActivity extends AppCompatActivity {
         }
     } //onActivityResul
 
-    //Login con correo y contraseña
-    public void signup(View view){
-        if(!email.getText().toString().matches("") && !password.getText().toString().matches("")){
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                guardarUsuario("BASIC",email.getText().toString());
-                                successI(email.getText().toString(), "BASIC");
-                            }else {
-                                Snackbar.make(findViewById(android.R.id.content), "Error al autenticar el usuario, puede que el usuario ya exista", Snackbar.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-        }else{
-            Snackbar.make(findViewById(android.R.id.content), "Tienes que rellenar todos los campos", Snackbar.LENGTH_LONG).show();
-        }
+    //popup registrarse
+    public void popUp(View view){
+        Intent popupWindow = new Intent(AuthActivity.this, PopupResigtrarse.class);
+        startActivity(popupWindow);
+
     }
 
     public void login(View view){
@@ -200,6 +197,7 @@ public class AuthActivity extends AppCompatActivity {
         hashMap.put("nombre", "");
         hashMap.put("apellidos", "");
         hashMap.put("biografia", "");
+        hashMap.put("foto", "");
 
         db.collection("users").document(email).set(hashMap);
     }

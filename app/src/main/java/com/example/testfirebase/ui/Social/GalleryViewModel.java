@@ -1,4 +1,4 @@
-package com.example.testfirebase.ui.MiEspacio;
+package com.example.testfirebase.ui.Social;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

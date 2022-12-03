@@ -60,6 +60,7 @@ public class HomeActivityD extends AppCompatActivity  {
     boolean doubleBackToExitPressedOnce = false;
     private DrawerLayout drawer;
     private NavigationMenuItemView nav_salir, nav_ajustes;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,9 @@ public class HomeActivityD extends AppCompatActivity  {
 
         db = FirebaseFirestore.getInstance();
         getUserandBio();
+        if(user.getPhotoUrl() != null){
+            db.collection("users").document(email).update("foto", user.getPhotoUrl());
+        }
 
         //Shared preferences
         preferences = (SharedPreferences) getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
@@ -99,7 +103,7 @@ public class HomeActivityD extends AppCompatActivity  {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_ajustes, R.id.nav_salir)
+                R.id.nav_home,  R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_ajustes, R.id.nav_salir)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);
@@ -112,7 +116,8 @@ public class HomeActivityD extends AppCompatActivity  {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_activity_d);
-        getUserandBio();
+        getUserandBioAndSet();
+
 
         nav_salir = findViewById(R.id.nav_salir);
         nav_salir.setOnClickListener(new View.OnClickListener() { //funcion para el boton salir
@@ -159,17 +164,44 @@ public class HomeActivityD extends AppCompatActivity  {
                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(usuario.equals("")){
+                            String emailC = email;
+                            int index = email.indexOf("@");
+                            emailC = emailC.substring(0,index);
+                            db.collection("users").document(email).update("usuario", emailC);
+                        }
+                    }
+                });
+    }
+
+    public void getUserandBioAndSet(){
+        db.collection("users").document(email).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+                        usuario = it.get("usuario").toString();
+                        biografia = it.get("biografia").toString();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         usuarioD = findViewById(R.id.usuarioDrawer);
                         biografiaD = findViewById(R.id.biografiaDrawer);
                         imageButton = findViewById(R.id.imagenDrawer);
-                        if(usuario.matches("") || biografia.matches("")){
-                            Toast.makeText(HomeActivityD.this, "Ve a la pestaña mi perfil para completar tus datos", Toast.LENGTH_SHORT).show();
+                        if(usuario.matches("")){
+                            if(usuario.equals("")){
+                                String emailC = email;
+                                int index = email.indexOf("@");
+                                emailC = emailC.substring(0,index);
+                                db.collection("users").document(email).update("usuario", emailC);
+                                biografiaD.setText("No tienes biografía.");
+                            }
                         }else{
                             usuarioD.setText(usuario);
                             biografiaD.setText(biografia);
                         }
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        if(user.getPhotoUrl() != null){
+                        if(user.getPhotoUrl() != null && imageButton != null) {
                             Glide.with(getApplicationContext())
                                     .load(user.getPhotoUrl())
                                     .into(imageButton);

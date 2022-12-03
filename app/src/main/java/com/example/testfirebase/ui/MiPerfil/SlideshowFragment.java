@@ -51,6 +51,7 @@ public class SlideshowFragment extends Fragment {
     private TextView usuarioDrawer, biografiaDrawer;
     private ImageView imageButton;
     private int TAKE_IMAGE_CODE = 10001;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
 
@@ -179,6 +180,7 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onSuccess(Uri uri) {
                 setUserProfileUrl(uri);
+                db.collection("users").document(emailPre).update("foto", uri);
             }
         });
     }

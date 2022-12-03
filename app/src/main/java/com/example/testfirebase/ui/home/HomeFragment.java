@@ -136,17 +136,6 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             albumes = task.getResult();
-                          /*  for(int i =0;i<albumes.size();i++) {
-                                Log.d("Album", albumes.getDocuments().get(i).get("tituloAlbum").toString() + ": " +
-                                        albumes.getDocuments().get(i).get("caratula").toString());
-
-                                cancionesList = albumes.getDocuments().get(i).toObject(CancionDocument.class).getCanciones();
-                                for (int j = 0; j < cancionesList.size(); j++) {
-                                    Log.d("Cancion", cancionesList.get(j).titulo + ": " + cancionesList.get(j).url);
-
-                                }
-
-                            } */
                             progressBar.setVisibility(View.INVISIBLE);
                             enlazarAdapter();
 

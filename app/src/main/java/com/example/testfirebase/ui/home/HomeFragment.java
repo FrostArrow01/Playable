@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
     //Para el recyclerview
     public void enlazarAdapter(){
         albumList = getView().findViewById(R.id.albumList);
-        adapter = new Adapter(getContext(),albumes);
+        adapter = new Adapter(getContext(),albumes,emailPre);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
         albumList.setLayoutManager(gridLayoutManager);
         albumList.setAdapter(adapter);

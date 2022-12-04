@@ -73,7 +73,7 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
                     .into(holder.imagenCancion);
 
             holder.tituloCancion.setText(cancionesList.get(position).titulo);
-            holder.duracionCancion.setText(duraciones.get(position));
+            holder.duracionCancion.setText("0"+duraciones.get(position));
 
             if (selectedPosition == position){
                 holder.fondo.setCardBackgroundColor(ContextCompat.getColor(context, R.color.AmarilloF) );
@@ -87,6 +87,7 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.View
                 holder.duracionCancion.setTextColor(ContextCompat.getColor(context, R.color.GrisF));
                 holder.estasonando.setVisibility(View.INVISIBLE);
             }
+
 
             holder.bind(cancionesList.get(position), Long.valueOf(duracionesLong.get(position)),listener);
 

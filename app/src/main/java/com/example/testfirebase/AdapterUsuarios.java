@@ -53,6 +53,12 @@ public class AdapterUsuarios extends RecyclerView.Adapter<AdapterUsuarios.ViewHo
             holder.usuarioDescripcion.setText("Este usuario no tiene descripción.");
         }
 
+        if(!usuarios.get(position).getAlbumes().equals("")){
+            holder.usuarioAlbum.setText("Album favorito: "+usuarios.get(position).getAlbumes());
+        }else{
+            holder.usuarioAlbum.setText("");
+        }
+
         try {
             if(!usuarios.get(position).getFoto().equals("")){
                 Glide.with(holder.usuarioImagen)
@@ -78,6 +84,7 @@ public class AdapterUsuarios extends RecyclerView.Adapter<AdapterUsuarios.ViewHo
         ImageView usuarioImagen;
         TextView usuarioN;
         TextView usuarioDescripcion;
+        TextView usuarioAlbum;
 
 
         public ViewHolderUsuarios(@NonNull View itemView) {
@@ -85,6 +92,7 @@ public class AdapterUsuarios extends RecyclerView.Adapter<AdapterUsuarios.ViewHo
             usuarioImagen = itemView.findViewById(R.id.usuarioImagen);
             usuarioN = itemView.findViewById(R.id.usuarioN);
             usuarioDescripcion = itemView.findViewById(R.id.descripcionN);
+            usuarioAlbum = itemView.findViewById(R.id.descripcionN2);
 
         }
     }

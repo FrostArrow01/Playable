@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TestFirebase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="TestFirebase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/AmarilloF</item>
-        <item name="colorPrimaryVariant">@color/NaranjaF</item>
+        <item name="colorPrimaryVariant">@color/AzulMarinoF</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/AmarilloF</item>
@@ -11,8 +11,39 @@
         <item name="colorOnSecondary">@color/AzulMarinoF</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/AzulMarinoF</item>
+        <item name="android:navigationBarColor">@color/AzulMarinoF</item>
+
+
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="TestFirebase.popUpRegistrarse">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
 
     </style>
+
+
+    <style name="SplashTheme" parent="TestFirebase">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+    <style name="Popup" parent="TestFirebase">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="SplashTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="SplashTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="SplashTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

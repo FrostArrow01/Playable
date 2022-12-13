@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="TestFirebase">
+    <style name="TestFirebase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/AmarilloF</item>
         <item name="colorPrimaryVariant">@color/AzulMarinoF</item>
@@ -17,18 +17,18 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="TestFirebase.popUpRegistrarse">
+    <style name="TestFirebase.popUpRegistrarse" >
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
 
     </style>
 
 
-    <style name="SplashTheme" parent="Theme.TestFirebase">
+    <style name="SplashTheme" parent="TestFirebase">
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="Popup" parent="Theme.TestFirebase">
+    <style name="Popup" parent="TestFirebase">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowIsFloating">true</item>
@@ -41,7 +41,8 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="SplashTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="SplashTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
     <style name="SplashTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 

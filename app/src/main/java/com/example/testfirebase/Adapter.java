@@ -19,10 +19,15 @@ import com.example.testfirebase.models.Album;
 import com.example.testfirebase.models.Cancion;
 import com.example.testfirebase.ui.MiPerfil.SlideshowFragment;
 import com.example.testfirebase.ui.home.HomeFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,15 +35,24 @@ import java.util.Locale;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    String albumesS;
+    String[] albumesA;
+    ArrayList<String> albumesDespues = new ArrayList<>();
+    Boolean presente = false;
+
     QuerySnapshot albumes;
     ArrayList<Album> albumesList = new ArrayList<>();
     ArrayList<Album> todosAlbumes = new ArrayList<>();
 
     LayoutInflater inflater;
     Album album;
+    String emailPre;
 
-    public Adapter(Context context, QuerySnapshot albumes){
+    public Adapter(Context context, QuerySnapshot albumes, String emailPre){
         this.albumes = albumes;
+        this.emailPre = emailPre;
         for (int i=0;i<albumes.size();i++){ //conversion de QuerySnapshot a objectos Album
             album = new Album();
             album.setCaratula(albumes.getDocuments().get(i).get("caratula").toString());
@@ -72,7 +86,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.imagenAlbum.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(view.getContext(), "Has mantenido pulsado: "+holder.tituloAlbum.getText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Ahora tu album favorito es: "+holder.tituloAlbum.getText(), Toast.LENGTH_SHORT).show();
+                getandSetAlbumes(holder,position);
+
                 return true;
             }
         });
@@ -134,5 +150,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             tituloAlbum = itemView.findViewById(R.id.tituloAlbum);
             imagenAlbum = itemView.findViewById(R.id.imagenAlbum);
         }
+    }
+
+    public void getandSetAlbumes(ViewHolder holder, int position){
+        db.collection("users").document(emailPre).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+
+
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        db.collection("users").document(emailPre).update("albumes", albumes.getDocuments().get(position).get("tituloAlbum"));
+                    }
+                });
     }
 }

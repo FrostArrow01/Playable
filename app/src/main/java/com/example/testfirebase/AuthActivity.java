@@ -40,6 +40,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AuthActivity extends AppCompatActivity {
@@ -95,7 +96,7 @@ public class AuthActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Snackbar.make(view, "Se ha enviado un email para cambiar tu contraseña", Snackbar.LENGTH_LONG).show();
                             }else{
-                                Snackbar.make(view, "El usuario con el correo: \"+email.getText().toString()+\" no existe", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, "El usuario con el correo: "+email.getText().toString()+" no existe", Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -198,6 +199,7 @@ public class AuthActivity extends AppCompatActivity {
         hashMap.put("apellidos", "");
         hashMap.put("biografia", "");
         hashMap.put("foto", "");
+        hashMap.put("albumes", "");
 
         db.collection("users").document(email).set(hashMap);
     }

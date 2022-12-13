@@ -60,7 +60,7 @@ public class HomeActivityD extends AppCompatActivity  {
     boolean doubleBackToExitPressedOnce = false;
     private DrawerLayout drawer;
     private NavigationMenuItemView nav_salir, nav_ajustes;
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser user ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,8 @@ public class HomeActivityD extends AppCompatActivity  {
         Intent i = getIntent();
         email = i.getStringExtra("email");
         provider = i.getStringExtra("provider");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         db = FirebaseFirestore.getInstance();
         getUserandBio();

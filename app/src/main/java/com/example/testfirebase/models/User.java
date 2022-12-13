@@ -1,6 +1,7 @@
 package com.example.testfirebase.models;
 
 public class User {
+    public String albumes;
     public String apellidos;
     public String biografia;
     public String email;
@@ -8,6 +9,14 @@ public class User {
     public String nombre;
     public String provider;
     public String usuario;
+
+    public String getAlbumes() {
+        return albumes;
+    }
+
+    public void setAlbumes(String albumes) {
+        this.albumes = albumes;
+    }
 
     public String getApellidos() {
         return apellidos;

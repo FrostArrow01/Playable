@@ -9,7 +9,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="contra_requirements"><i>Al menos 6 carácteres y 1 símbolo o letra.</i></string>
+    <string name="contra_requirements"><i>Al menos 6 carácteres.</i></string>
 
     /*Menu lateral*/
     <string name="menu_home">Inicio</string>

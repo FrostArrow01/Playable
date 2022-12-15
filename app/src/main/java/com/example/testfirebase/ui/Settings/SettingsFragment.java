@@ -21,9 +21,11 @@ import android.widget.LinearLayout;
 
 import com.example.testfirebase.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -33,6 +35,7 @@ public class SettingsFragment extends Fragment {
     private SettingsViewModel mViewModel;
     private String emailActual;
     private SharedPreferences preferences;
+    private String provider;
     private FirebaseFirestore db;
 
 
@@ -54,6 +57,7 @@ public class SettingsFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+
         preferences = (SharedPreferences) this.getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
         emailActual = preferences.getString("email", null);
 
@@ -65,17 +69,40 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+
         cambiarContraS = view.findViewById(R.id.cambiarContraS);
-        cambiarContraS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recuperarContrasena(view);
-            }
-        });
+
+        getProvider();
 
 
 
+    }
 
+    public void getProvider(){
+        db.collection("users").document(emailActual).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot it) {
+                        if(it.exists()){
+                            provider = it.get("provider").toString();
+                        }
+
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(provider.equals("GOOGLE")){
+                            cambiarContraS.setVisibility(View.GONE);
+                        }else{
+                            cambiarContraS.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    recuperarContrasena(view);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     public void recuperarContrasena(View view){

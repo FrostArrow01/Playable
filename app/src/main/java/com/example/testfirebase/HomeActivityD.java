@@ -160,8 +160,11 @@ public class HomeActivityD extends AppCompatActivity  {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot it) {
-                        usuario = it.get("usuario").toString();
-                        biografia = it.get("biografia").toString();
+                        if(it.exists()){
+                            usuario = it.get("usuario").toString();
+                            biografia = it.get("biografia").toString();
+                        }
+
                     }
                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -181,8 +184,10 @@ public class HomeActivityD extends AppCompatActivity  {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot it) {
-                        usuario = it.get("usuario").toString();
-                        biografia = it.get("biografia").toString();
+                        if(it.exists()) {
+                            usuario = it.get("usuario").toString();
+                            biografia = it.get("biografia").toString();
+                        }
                     }
                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

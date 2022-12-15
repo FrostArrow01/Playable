@@ -90,9 +90,10 @@ public class PopupResigtrarse extends AppCompatActivity {
 
     public void guardarUsuario(String provider, String email){ //Funcion apuntes para guardar usuario y campos
         HashMap<String, String> hashMap = new HashMap<String, String>();
+        hashMap.put("albumes", "");
         hashMap.put("email", email);
         hashMap.put("provider", provider);
-        hashMap.put("usuario", usuarioT);
+        hashMap.put("usuario", "");
         hashMap.put("nombre", "");
         hashMap.put("apellidos", "");
         hashMap.put("biografia", "");
